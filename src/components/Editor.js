@@ -5,8 +5,7 @@ import { MetroSpinner as Loader } from 'react-spinners-kit'
 
 import PropTypes from 'prop-types'
 
-
-const LOADING_TIME = 200;
+import { connect } from 'react-redux';
 
 class Editor extends Component {
     constructor(props) {
@@ -17,46 +16,47 @@ class Editor extends Component {
             width: 0,
             isReady: false
         };
-        this.editorRef = React.createRef();
     }
 
 
     editorDidMount = (editor, monaco) => {
         this.setState({
+            ...this.state,
             code: '',
         })
-        if (this.props.focus) editor.focus();
-        console.log(editor.onKeyDown(event => {
+        // if (this.props.focus) editor.focus();
+        // console.log(editor.onKeyDown(event => {
 
-            const { browserEvent, ctrlKey } = event;
-            if (browserEvent.key === 's' && ctrlKey) {
-                event.preventDefault();
-                if (this.props.editorOptions.readOnly) {
-                    alert("ReadOnly area, cannot simulate ctrl+s")
-                } else {
-                    // console.log("Saving", this.state.code);
-                }
-            }
-        }));
+        //     const { browserEvent, ctrlKey } = event;
+        //     if (browserEvent.key === 's' && ctrlKey) {
+        //         event.preventDefault();
+        //         if (this.props.editorOptions.readOnly) {
+        //             alert("ReadOnly area, cannot simulate ctrl+s")
+        //         } else {
+        //             // console.log("Saving", this.state.code);
+        //         }
+        //     }
+
+        // }));
     };
 
     componentDidMount() {
-        window.setTimeout(() => {
-            this.setState({
-                isReady: true
-            })
-        }, LOADING_TIME)
+        this.setState({
+            ...this.state,
+            isReady: true
+        })
     }
 
     onChange = (newValue, e) => {
         this.setState({
+            ...this.state,
             code: newValue
         })
-        console.log(this.state.code);
     };
 
     handleResize = (width, height) => {
         this.setState({
+            ...this.state,
             height: height,
             width: width
         })
@@ -65,7 +65,6 @@ class Editor extends Component {
     render() {
         const { code, width, height, isReady } = this.state;
         const { editorOptions, language, theme } = this.props;
-
         return (
             <div style={{
                 height: "100%",
@@ -79,11 +78,10 @@ class Editor extends Component {
                     refreshRate={50} />
                 {
                     isReady ? <MonacoEditor
-                        ref={this.editorRef}
                         height={height}
                         width={width}
                         language={language}
-                        theme={theme}
+                        theme={`vs-${theme}`}
                         value={code}
                         options={editorOptions}
                         onChange={this.onChange}
@@ -110,8 +108,12 @@ class Editor extends Component {
 Editor.propTypes = {
     editorOptions: PropTypes.object,
     language: PropTypes.string,
-    theme: PropTypes.oneOf(["vs-dark", "vs-light"]),
+    theme: PropTypes.oneOf(["dark", "light"]),
     focus: PropTypes.bool
 }
 
-export default Editor;
+const mapStateToProps = state => ({
+    theme: state.settings.theme
+})
+
+export default connect(mapStateToProps)(Editor);

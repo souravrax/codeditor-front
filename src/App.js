@@ -1,66 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import NavBar from './NavBar'
-import Editor from './Editor'
+import React, { useState } from 'react';
 
 
-import { Textarea } from 'baseui/textarea';
-import { SIZE } from 'baseui/input';
+// BaseWeb
+import { BaseProvider, LightTheme, DarkTheme } from "baseui"
 
-const App = ({ dark, toggleTheme }) => {
-    const [input, setInput] = useState('');
-    const [output, setOutput] = useState('');
-    const [code, setCode] = useState('');
+
+// Component/Container Imports
+import MainPage from './pages/MainPage'
+
+// Redux
+import { connect } from 'react-redux';
+
+
+function capitalize(theme) {
+    return theme[0].toUpperCase() + theme.slice(1);
+}
+
+const App = ({ theme }) => {
     return (
-        <>
-            <NavBar
-                toggleTheme={toggleTheme}
-            />
-            <div className="editor"
-                style={{
-                    height: "60vh",
-                    width: "100vw"
-                }}
-            >
-                <Editor
-                    theme={`vs-${dark ? "dark" : "light"}`}
-                    onChange={(newCode, event) => {
-                        setCode(newCode);
-                        console.log(code);
-                    }}
-                    editorOptions={{
-                        smoothScrolling: true,
-                        showUnused: true,
-                        showFoldingControls: true,
-                        selectionClipboard: true,
-                        selectOnLineNumbers: true,
-                        scrollbar: true,
-                        quickSuggestions: true,
-                        padding: 0,
-                        links: true,
-                    }}
-                    focus={true}
-                />
-            </div>
-            <div className="input-output"
-                style={{
-                    display: "flex",
-                    height: "calc(40vh - 61px)"
-                }}
-            >
-                <Textarea
-                    placeholder="Input"
-                    value={input}
-                    clearable
-                    onChange={(e) => setInput(e.target.value)}
-                />
-                <Textarea
-                    disabled
-                    clearable
-                    value={output}
-                    placeholder="Output"
-                />
-            </div>
-        </>
+        <BaseProvider theme={`${capitalize(theme)}Theme` == "LightTheme" ? LightTheme : DarkTheme}>
+            <MainPage />
+        </BaseProvider>
     )
 }
-export default App;
+
+const mapStateToProps = state => ({
+    theme: state.settings.theme
+})
+
+export default connect(mapStateToProps)(App);
