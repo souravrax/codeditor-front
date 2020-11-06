@@ -4,10 +4,11 @@ import Editor from "../components/Editor"
 
 import { Textarea } from 'baseui/textarea';
 
-const MainPage = () => {
-    const [input, setInput] = useState('');
-    const [output, setOutput] = useState('');
-    const [code, setCode] = useState('');
+import { connect } from 'react-redux'
+
+import { setInput } from '../app/master/master-actions'
+
+const MainPage = ({ input, setInput, output }) => {
     return (
         <>
             <NavBar
@@ -20,10 +21,6 @@ const MainPage = () => {
                 }}
             >
                 <Editor
-                    onChange={(newCode, event) => {
-                        setCode(newCode);
-                        console.log(code);
-                    }}
                     editorOptions={{
                         smoothScrolling: true,
                         showUnused: true,
@@ -61,4 +58,13 @@ const MainPage = () => {
     )
 }
 
-export default MainPage;
+const mapDispatchToProps = dispatch => ({
+    setInput: input => dispatch(setInput(input)),
+})
+
+const mapStateToProps = state => ({
+    input: state.master.input,
+    output: state.master.output,
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);

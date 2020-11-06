@@ -7,11 +7,12 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux';
 
+import { setCode } from '../app/master/master-actions'
+
 class Editor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            code: "",
             height: 0,
             width: 0,
             isReady: false
@@ -20,10 +21,6 @@ class Editor extends Component {
 
 
     editorDidMount = (editor, monaco) => {
-        this.setState({
-            ...this.state,
-            code: '',
-        })
         // if (this.props.focus) editor.focus();
         // console.log(editor.onKeyDown(event => {
 
@@ -47,13 +44,6 @@ class Editor extends Component {
         })
     }
 
-    onChange = (newValue, e) => {
-        this.setState({
-            ...this.state,
-            code: newValue
-        })
-    };
-
     handleResize = (width, height) => {
         this.setState({
             ...this.state,
@@ -63,8 +53,8 @@ class Editor extends Component {
     }
 
     render() {
-        const { code, width, height, isReady } = this.state;
-        const { editorOptions, language, theme } = this.props;
+        const { width, height, isReady } = this.state;
+        const { editorOptions, language, theme, code, setCode } = this.props;
         return (
             <div style={{
                 height: "100%",
@@ -84,7 +74,9 @@ class Editor extends Component {
                         theme={`vs-${theme}`}
                         value={code}
                         options={editorOptions}
-                        onChange={this.onChange}
+                        onChange={(newCode, event) => {
+                            setCode(newCode);
+                        }}
                         editorDidMount={this.editorDidMount}
                         editorWillMount={this.editorWillMount}
                     /> :
@@ -113,7 +105,13 @@ Editor.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    theme: state.settings.theme
+    theme: state.settings.theme,
+    code: state.master.code,
+    language: state.master.language
+});
+
+const mapDispatchToProps = dispatch => ({
+    setCode: code => dispatch(setCode(code))
 })
 
-export default connect(mapStateToProps)(Editor);
+export default connect(mapStateToProps, mapDispatchToProps)(Editor);

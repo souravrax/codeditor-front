@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
     theme: "light",
+    minimap: true,
 }
 
 const settingsReducer = (state = INITIAL_STATE, action) => {
@@ -8,6 +9,11 @@ const settingsReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 theme: action.payload
+            }
+        case "SET_MINIMAP":
+            return {
+                ...state,
+                minimap: action.payload
             }
         default:
             return state;

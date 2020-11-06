@@ -1,11 +1,13 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
+
+// Baseui
+import { useStyletron } from 'baseui';
 import {
     HeaderNavigation,
     ALIGN,
     StyledNavigationList,
     StyledNavigationItem
 } from "baseui/header-navigation";
-import { useStyletron } from 'baseui';
 import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
 import { Input } from 'baseui/input'
 
@@ -16,40 +18,54 @@ import Settings from './Settings'
 import Share from './Share'
 
 
-const options =
-    [
-        { label: "Bash", id: "bash" },
-        { label: "C", id: "c" },
-        { label: "C++", id: "c++" },
-        { label: "C++14", id: "c++14" },
-        { label: "C++17", id: "c++17" },
-        { label: "Java", id: "java" },
-        { label: "Python 2", id: "py2" },
-        { label: "Python 3", id: "py3" },
-        { label: "Javascript", id: "nodejs" },
-        { label: "Go", id: "go" },
-    ];
+// Redux
+import { connect } from 'react-redux';
+import { setCommandLineArguments, setExecutionState, setLanguage, setOutput } from '../app/master/master-actions';
 
-const NavBar = () => {
-    const [value, setValue] = React.useState("");
-    const [language, setLanguage] = React.useState("Bash");
+// Connect to server
+import axios from 'axios';
+
+const options = [
+    { label: "Bash", id: "bash" },
+    { label: "C", id: "c" },
+    { label: "C++", id: "c++" },
+    { label: "C++14", id: "c++14" },
+    { label: "C++17", id: "c++17" },
+    { label: "Java", id: "java" },
+    { label: "Python 2", id: "py2" },
+    { label: "Python 3", id: "py3" },
+    { label: "Javascript", id: "nodejs" },
+    { label: "Go", id: "go" },
+];
+
+const URL = "http://localhost:5000/";
+
+const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setLanguage, input, setOutput }) => {
     const [showSettings, setShowSettings] = React.useState(false);
     const [showShareModel, setShowShareModel] = React.useState(false);
     const [css] = useStyletron();
 
-    options.sort();
 
-    function mapOptionToString(option) {
-        return option.label;
+    const handleRun = () => {
+        setIsExecuting(true);
+        const payload = {
+            code: code,
+            cArgs: cla,
+            language: language,
+            input: input
+        }
+        console.table(payload);
+        axios.post(URL, payload)
+            .then(response => {
+                setIsExecuting(false);
+                console.log("Response: ", response);
+                setOutput(response);
+            })
+            .catch(error => {
+                setIsExecuting(false);
+                console.log(error);
+            })
     }
-    const filteredOptions = useMemo(() => {
-        return options.filter(option => {
-            const optionAsString = mapOptionToString(option);
-            return optionAsString
-                .toLowerCase()
-                .includes(value.toLowerCase());
-        });
-    }, [options, value]);
 
     return (
         <div>
@@ -75,9 +91,8 @@ const NavBar = () => {
                                 console.log(lang);
                             }}
                             size={SIZE.compact}
-                            options={filteredOptions}
-                            mapOptionToString={mapOptionToString}
-                            name="Language"
+                            options={options}
+                            mapOptionToString={(option) => option.label}
                         />
                     </StyledNavigationItem>
                 </StyledNavigationList>
@@ -89,8 +104,10 @@ const NavBar = () => {
                             startEnhancer={() => <i className="fas fa-play"></i>}
                             $style={{
                                 backgroundColor: "#00AE86",
+                                margin: "0px",
                             }}
-                            isLoading={false}
+                            isLoading={isExecuting}
+                            onClick={handleRun}
                         >
                             Run
                     </Button>
@@ -99,8 +116,8 @@ const NavBar = () => {
                 <StyledNavigationList $align={ALIGN.right} $style={{ marginRight: "10px" }}>
                     <StyledNavigationItem>
                         <Input
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
+                            value={cla}
+                            onChange={(e) => setCLA(e.target.value)}
                             placeholder="Command Line Args"
                             size={SIZE.compact}
                             startEnhancer={() => <i className="fas fa-terminal"></i>}
@@ -130,4 +147,19 @@ const NavBar = () => {
     );
 }
 
-export default NavBar;
+const mapStateToProps = state => ({
+    isExecuting: state.master.isExecuting,
+    language: state.master.language,
+    cla: state.master.commandLineArguments,
+    input: state.master.input,
+    code: state.master.code
+})
+
+const mapDispatchToProps = dispatch => ({
+    setIsExecuting: value => dispatch(setExecutionState(value)),
+    setLanguage: language => dispatch(setLanguage(language)),
+    setCLA: cla => dispatch(setCommandLineArguments(cla)),
+    setOutput: output => dispatch(setOutput(output))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

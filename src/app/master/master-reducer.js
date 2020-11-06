@@ -2,7 +2,7 @@ const INITIAL_STATE = {
     code: "",
     input: "",
     output: "",
-    language: "",
+    language: "C",
     commandLineArguments: "",
     isExecuting: false
 };
