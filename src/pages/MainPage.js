@@ -6,7 +6,8 @@ import { Textarea } from 'baseui/textarea';
 
 import { connect } from 'react-redux'
 
-import { setInput } from '../app/master/master-actions'
+import { setInput } from '../app/master/master-actions';
+
 
 const MainPage = ({ input, setInput, output }) => {
     return (
@@ -20,20 +21,7 @@ const MainPage = ({ input, setInput, output }) => {
                     width: "100vw"
                 }}
             >
-                <Editor
-                    editorOptions={{
-                        smoothScrolling: true,
-                        showUnused: true,
-                        showFoldingControls: true,
-                        selectionClipboard: true,
-                        selectOnLineNumbers: true,
-                        scrollbar: true,
-                        quickSuggestions: true,
-                        padding: 0,
-                        links: true,
-                    }}
-                    focus={true}
-                />
+                <Editor />
             </div>
             <div className="input-output"
                 style={{

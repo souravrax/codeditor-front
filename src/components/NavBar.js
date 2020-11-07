@@ -17,7 +17,7 @@ import { Heading, HeadingLevel } from 'baseui/heading'
 import Settings from './Settings'
 import Share from './Share'
 
-
+import { RingSpinner } from 'react-spinners-kit'
 // Redux
 import { connect } from 'react-redux';
 import { setCommandLineArguments, setExecutionState, setLanguage, setOutput } from '../app/master/master-actions';
@@ -78,9 +78,24 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                         }}
                     >
                         <HeadingLevel>
-                            <Heading styleLevel={4}>
-                                CodEditor
-                        </Heading>
+                            <Heading
+                                overrides={{
+                                    Block: {
+                                        style: ({ $theme }) => ({
+                                            fontSize: "20px",
+                                            lineHeight: "100%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            fontFamily: `"Comfortaa", cursive`,
+                                        })
+                                    }
+                                }}
+                            >
+                                c
+                                <RingSpinner />
+                                deditor
+                            </Heading>
                         </HeadingLevel>
                     </StyledNavigationItem>
                     <StyledNavigationItem>
@@ -111,8 +126,14 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                                     style: ({ $theme, $isLoading }) => {
                                         return {
                                             backgroundColor: `${$isLoading ? $theme.colors.positive200 : $theme.colors.positive300}`,
-                                            borderRadius: `${$theme.borders.radius200}`,
-                                            padding: "10px 30px",
+                                            borderTopLeftRadius: `${$theme.borders.radius200} !important`,
+                                            borderTopRightRadius: `${$theme.borders.radius200} !important`,
+                                            borderBottomLeftRadius: `${$theme.borders.radius200} !important`,
+                                            borderBottomRightRadius: `${$theme.borders.radius200} !important`,
+                                            paddingTop: "10px",
+                                            paddingBottom: "10px",
+                                            paddingLeft: "30px",
+                                            paddingRight: "30px",
                                             boxShadow: `${$theme.lighting.shadow400}`
                                         }
                                     }

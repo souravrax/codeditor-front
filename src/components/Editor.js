@@ -56,7 +56,19 @@ class Editor extends Component {
 
     render() {
         const { width, height, isReady } = this.state;
-        const { editorOptions, language, theme, code, setCode } = this.props;
+        const {
+            language,
+            code,
+            setCode,
+            theme,
+            minimapStatus,
+            showUnused,
+            selectOnLineNumbers,
+            scrollbar,
+            quickSuggestion,
+            showFoldingControls,
+        } = this.props;
+
         return (
             <div style={{
                 height: "100%",
@@ -75,7 +87,16 @@ class Editor extends Component {
                         language={languageToSyntax[language]}
                         theme={`vs-${theme}`}
                         value={code}
-                        options={editorOptions}
+                        options={{
+                            minimap: {
+                                enabled: minimapStatus
+                            },
+                            showFoldingControls: showFoldingControls,
+                            selectOnLineNumbers: selectOnLineNumbers,
+                            scrollbar: scrollbar,
+                            quickSuggestions: quickSuggestion,
+                            showUnused: showUnused
+                        }}
                         onChange={(newCode, event) => {
                             setCode(newCode);
                         }}
@@ -107,9 +128,18 @@ Editor.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    theme: state.settings.theme,
+    // master states
     code: state.master.code,
-    language: state.master.language
+    language: state.master.language,
+
+    // settings states
+    theme: state.settings.theme,
+    minimapStatus: state.settings.minimap,
+    showUnused: state.settings.showUnused,
+    showFoldingControls: state.settings.showFoldingControls,
+    selectOnLineNumbers: state.settings.selectOnLineNumbers,
+    scrollbar: state.settings.scrollbar,
+    quickSuggestion: state.settings.quickSuggestion
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -10,12 +10,50 @@ import {
 import Option from './Option';
 
 
+// Redux imports
 import { connect } from 'react-redux';
-import { setTheme } from '../app/settings/settings-actions';
+import {
+    setTheme,
+    setMinimap,
+    setQuickSuggestion,
+    setScrollbar,
+    setSelectOnLineNumber,
+    setShowFoldingControls,
+    setShowUnused
+} from '../app/settings/settings-actions';
 
-const Settings = ({ showSettings, setShowSettings, setTheme }) => {
-    const [dark, setDark] = useState(false);
-    const [minimap, setMinimap] = useState(true);
+const Settings = ({
+    showSettings,
+    setShowSettings,
+
+    theme,
+    minimap,
+    showUnused,
+    selectOnLineNumbers,
+    scrollbar,
+    quickSuggestion,
+    showFoldingControls,
+
+    setTheme,
+    setMinimap,
+    setSelectOnLineNumber,
+    setShowUnused,
+    setScrollbar,
+    setShowFoldingControls,
+    setQuickSuggestion
+}) => {
+    // showSettings and setShowSettings is from the parent node
+    // others are from redux settings state
+
+    const settings = [
+        [minimap, setMinimap, "Editor Minimap"],
+        [selectOnLineNumbers, setSelectOnLineNumber, "Select On Line Number"],
+        [scrollbar, setScrollbar, "Editor Scrollbar"],
+        [showUnused, setShowUnused, "Show Unused"],
+        [quickSuggestion, setQuickSuggestion, "Quick Suggestion"],
+        [showFoldingControls, setShowFoldingControls, "Folding Controls"]
+    ];
+
     return (
         <Drawer
             isOpen={showSettings}
@@ -28,36 +66,74 @@ const Settings = ({ showSettings, setShowSettings, setTheme }) => {
                 }}
             >Settings</h1>
             <Checkbox
-                checked={dark}
-                checkmarkType={STYLE_TYPE.toggle}
+                checked={theme === "dark"}
+                checkmarkType={STYLE_TYPE.toggle_round}
                 onChange={e => {
                     setTheme(!e.target.checked ? "light" : "dark");
-                    // console.log(e.target.checked ? "dark" : "light");
-                    setDark(e.target.checked);
                 }}
                 labelPlacement={LABEL_PLACEMENT.right}
+                overrides={{
+                    Root: {
+                        style: ({ $theme }) => ({
+                            marginTop: "10px",
+                            marginBottom: "10px",
+                            backgroundColor: `${$theme.colors.backgroundSecondary}`,
+                            paddingTop: "10px",
+                            paddingBottom: "10px",
+                            borderRadius: `${$theme.borders.radius400}`
+                        })
+                    }
+                }}
             >
                 Dark Mode
             </Checkbox>
-            <Checkbox
-                checked={minimap}
-                checkmarkType={STYLE_TYPE.toggle}
-                onChange={e => {
-                    setMinimap(e.target.checked);
-                }}
-                labelPlacement={LABEL_PLACEMENT.right}
-            >
-                Editor Minimap
-            </Checkbox>
-            <Option
-                name="Dark Theme"
-            />
+            {
+                settings.map(([state, action, name], indx) => (
+                    <Checkbox
+                        checked={state}
+                        key={indx}
+                        checkmarkType={STYLE_TYPE.toggle_round}
+                        onChange={e => action(e.target.checked)}
+                        labelPlacement={LABEL_PLACEMENT.right}
+                        overrides={{
+                            Root: {
+                                style: ({ $theme }) => ({
+                                    marginTop: "10px",
+                                    marginBottom: "10px",
+                                    backgroundColor: `${$theme.colors.backgroundSecondary}`,
+                                    paddingTop: "10px",
+                                    paddingBottom: "10px",
+                                    borderRadius: `${$theme.borders.radius400}`
+                                })
+                            }
+                        }}
+                    >
+                        {name}
+                    </Checkbox>
+                ))
+            }
         </Drawer >
     )
 };
 
-const mapDispatchToProps = dispatch => ({
-    setTheme: (theme) => (dispatch(setTheme(theme)))
+const mapStateToProps = ({ settings }) => ({
+    theme: settings.theme,
+    minimap: settings.minimap,
+    showUnused: settings.showUnused,
+    showFoldingControls: settings.showFoldingControls,
+    selectOnLineNumbers: settings.selectOnLineNumbers,
+    scrollbar: settings.scrollbar,
+    quickSuggestion: settings.quickSuggestion
 })
 
-export default connect(null, mapDispatchToProps)(Settings);
+const mapDispatchToProps = dispatch => ({
+    setTheme: (theme) => (dispatch(setTheme(theme))),
+    setMinimap: value => dispatch(setMinimap(value)),
+    setShowUnused: value => dispatch(setShowUnused(value)),
+    setShowFoldingControls: value => dispatch(setShowFoldingControls(value)),
+    setSelectOnLineNumber: value => dispatch(setSelectOnLineNumber(value)),
+    setScrollbar: value => dispatch(setScrollbar(value)),
+    setQuickSuggestion: value => dispatch(setQuickSuggestion(value))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
