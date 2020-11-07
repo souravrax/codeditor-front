@@ -7,13 +7,15 @@ import {
     LABEL_PLACEMENT
 } from "baseui/checkbox";
 
+import Option from './Option';
+
 
 import { connect } from 'react-redux';
 import { setTheme } from '../app/settings/settings-actions';
 
 const Settings = ({ showSettings, setShowSettings, setTheme }) => {
-    const [checked, setChecked] = useState(false);
-    console.log(setTheme);
+    const [dark, setDark] = useState(false);
+    const [minimap, setMinimap] = useState(true);
     return (
         <Drawer
             isOpen={showSettings}
@@ -26,21 +28,33 @@ const Settings = ({ showSettings, setShowSettings, setTheme }) => {
                 }}
             >Settings</h1>
             <Checkbox
-                checked={checked}
+                checked={dark}
                 checkmarkType={STYLE_TYPE.toggle}
                 onChange={e => {
                     setTheme(!e.target.checked ? "light" : "dark");
-                    console.log(e.target.checked ? "dark" : "light");
-                    setChecked(e.target.checked);
+                    // console.log(e.target.checked ? "dark" : "light");
+                    setDark(e.target.checked);
                 }}
                 labelPlacement={LABEL_PLACEMENT.right}
             >
                 Dark Mode
             </Checkbox>
+            <Checkbox
+                checked={minimap}
+                checkmarkType={STYLE_TYPE.toggle}
+                onChange={e => {
+                    setMinimap(e.target.checked);
+                }}
+                labelPlacement={LABEL_PLACEMENT.right}
+            >
+                Editor Minimap
+            </Checkbox>
+            <Option
+                name="Dark Theme"
+            />
         </Drawer >
     )
 };
-
 
 const mapDispatchToProps = dispatch => ({
     setTheme: (theme) => (dispatch(setTheme(theme)))

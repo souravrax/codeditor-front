@@ -46,12 +46,31 @@ const MainPage = ({ input, setInput, output }) => {
                     value={input}
                     clearable
                     onChange={(e) => setInput(e.target.value)}
+                    overrides={{
+                        InputContainer: {
+                            style: ({ $theme }) => {
+                                return {
+                                    borderRight: `1px solid ${$theme.colors.primary100}`,
+                                    borderTop: `1px solid ${$theme.colors.primary100}`,
+                                }
+                            }
+                        }
+                    }}
                 />
                 <Textarea
-                    disabled
-                    clearable
                     value={output}
                     placeholder="Output"
+                    overrides={{
+                        InputContainer: {
+                            style: ({ $theme }) => {
+                                return {
+                                    borderTop: `1px solid ${$theme.colors.primary100}`,
+                                    backgroundColor: `${$theme.colors.backgroundStateDisabled}`,
+                                }
+                            }
+                        }
+                    }}
+
                 />
             </div>
         </>

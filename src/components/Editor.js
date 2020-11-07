@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 
 import { setCode } from '../app/master/master-actions'
 
+import languageToSyntax from '../res/mapLanguageToSyntax.json';
+
 class Editor extends Component {
     constructor(props) {
         super(props);
@@ -21,6 +23,7 @@ class Editor extends Component {
 
 
     editorDidMount = (editor, monaco) => {
+        // console.log(mappings);
         // if (this.props.focus) editor.focus();
         // console.log(editor.onKeyDown(event => {
 
@@ -30,10 +33,9 @@ class Editor extends Component {
         //         if (this.props.editorOptions.readOnly) {
         //             alert("ReadOnly area, cannot simulate ctrl+s")
         //         } else {
-        //             // console.log("Saving", this.state.code);
+        //             console.log("Saving", this.state.code);
         //         }
         //     }
-
         // }));
     };
 
@@ -70,7 +72,7 @@ class Editor extends Component {
                     isReady ? <MonacoEditor
                         height={height}
                         width={width}
-                        language={language}
+                        language={languageToSyntax[language]}
                         theme={`vs-${theme}`}
                         value={code}
                         options={editorOptions}

@@ -1,0 +1,13 @@
+{
+    "C++":"cpp",
+    "C++14":"cpp",
+    "C++17":"cpp",
+    "C":"c",
+    "C#":"csharp",
+    "Go":"go",
+    "Java":"java",
+    "Javascript":"javascript",
+    "Bash":"shell",
+    "Python 2": "python",
+    "Python 3": "python"
+}

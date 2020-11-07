@@ -38,7 +38,7 @@ const options = [
     { label: "Go", id: "go" },
 ];
 
-const URL = "http://localhost:5000/";
+const URL = "http://localhost:5000/execute/";
 
 const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setLanguage, input, setOutput }) => {
     const [showSettings, setShowSettings] = React.useState(false);
@@ -59,12 +59,12 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
             .then(response => {
                 setIsExecuting(false);
                 console.log("Response: ", response);
-                setOutput(response);
+                setOutput(response.data.output);
             })
             .catch(error => {
                 setIsExecuting(false);
                 console.log(error);
-            })
+            });
     }
 
     return (
@@ -91,7 +91,9 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                                 console.log(lang);
                             }}
                             size={SIZE.compact}
+                            clearable={false}
                             options={options}
+                            error={language.length == 0}
                             mapOptionToString={(option) => option.label}
                         />
                     </StyledNavigationItem>
@@ -102,15 +104,21 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                         <Button
                             size={SIZE.compact}
                             startEnhancer={() => <i className="fas fa-play"></i>}
-                            $style={{
-                                backgroundColor: "#00AE86",
-                                margin: "0px",
-                            }}
                             isLoading={isExecuting}
                             onClick={handleRun}
-                        >
-                            Run
-                    </Button>
+                            overrides={{
+                                BaseButton: {
+                                    style: ({ $theme, $isLoading }) => {
+                                        return {
+                                            backgroundColor: `${$isLoading ? $theme.colors.positive200 : $theme.colors.positive300}`,
+                                            borderRadius: `${$theme.borders.radius200}`,
+                                            padding: "10px 30px",
+                                            boxShadow: `${$theme.lighting.shadow400}`
+                                        }
+                                    }
+                                }
+                            }}
+                        > Run </Button>
                     </StyledNavigationItem>
                 </StyledNavigationList>
                 <StyledNavigationList $align={ALIGN.right} $style={{ marginRight: "10px" }}>
@@ -119,6 +127,7 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                             value={cla}
                             onChange={(e) => setCLA(e.target.value)}
                             placeholder="Command Line Args"
+                            disabled
                             size={SIZE.compact}
                             startEnhancer={() => <i className="fas fa-terminal"></i>}
                             clearOnEscape

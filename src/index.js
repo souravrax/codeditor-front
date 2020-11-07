@@ -10,19 +10,23 @@ const engine = new Styletron();
 
 
 // REDUX
-import store from './app/store';
+import { store, persistor } from './app/store';
 import { Provider } from 'react-redux';
 
 
+// Redux Persistence
+import { PersistGate } from 'redux-persist/integration/react';
+
 // Components/Containers Imports
 import App from './App';
-
 
 // ReactDOM Render
 ReactDOM.render(
   <Provider store={store}>
     <StyletronProvider value={engine}>
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
     </StyletronProvider>
   </Provider>,
   document.getElementById('root')
