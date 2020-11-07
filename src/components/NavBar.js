@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 // Baseui
 import { useStyletron } from 'baseui';
@@ -38,13 +38,13 @@ const options = [
     { label: "Go", id: "go" },
 ];
 
-const URL = "http://localhost:5000/execute/";
+// const URL = "http://localhost:5000/execute/";
+const URL = "https://codeditorapi.azurewebsites.net/execute";
 
 const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setLanguage, input, setOutput }) => {
     const [showSettings, setShowSettings] = React.useState(false);
     const [showShareModel, setShowShareModel] = React.useState(false);
     const [css] = useStyletron();
-
 
     const handleRun = () => {
         setIsExecuting(true);

@@ -7,8 +7,7 @@ import {
     LABEL_PLACEMENT
 } from "baseui/checkbox";
 
-import Option from './Option';
-
+// import Option from './Option';
 
 // Redux imports
 import { connect } from 'react-redux';
@@ -42,7 +41,7 @@ const Settings = ({
     setShowFoldingControls,
     setQuickSuggestion
 }) => {
-    // showSettings and setShowSettings is from the parent node
+    // showSettings and setShowSettings are from the parent node
     // others are from redux settings state
 
     const settings = [
