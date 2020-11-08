@@ -23,20 +23,16 @@ class Editor extends Component {
 
 
     editorDidMount = (editor, monaco) => {
-        // console.log(mappings);
-        // if (this.props.focus) editor.focus();
-        // console.log(editor.onKeyDown(event => {
-
-        //     const { browserEvent, ctrlKey } = event;
-        //     if (browserEvent.key === 's' && ctrlKey) {
-        //         event.preventDefault();
-        //         if (this.props.editorOptions.readOnly) {
-        //             alert("ReadOnly area, cannot simulate ctrl+s")
-        //         } else {
-        //             console.log("Saving", this.state.code);
-        //         }
-        //     }
-        // }));
+        editor.onKeyDown(event => {
+            const { browserEvent, ctrlKey } = event;
+            const { key } = browserEvent;
+            if (key === 's' && ctrlKey) {
+                event.preventDefault();
+            } else if(key == 'Enter' && ctrlKey) {
+                event.preventDefault();
+                alert("Execute");
+            }
+        });
     };
 
     componentDidMount() {

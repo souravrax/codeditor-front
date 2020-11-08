@@ -1,20 +1,22 @@
 "use strict";
-import React from "react";
+import React, { useState } from "react";
 
 // Baseui
 import { HeaderNavigation, ALIGN, StyledNavigationList, StyledNavigationItem } from "baseui/header-navigation";
-import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
+import { Button, SIZE, SHAPE, KIND as ButtonKind, KIND } from "baseui/button";
 import { Input } from 'baseui/input'
 import { Combobox } from 'baseui/combobox';
 import { Heading, HeadingLevel } from 'baseui/heading'
 import { useSnackbar, PLACEMENT, DURATION } from 'baseui/snackbar';
+import { StatefulPopover, TRIGGER_TYPE } from 'baseui/popover';
 
 // Custom Components
 import Settings from './Settings'
 import Share from './Share'
+import ImportSharedCode from './ImportSharedCode';
+import Logo from '../assets/logo.png';
+import InfoModel from '../components/Info';
 
-// React spinners kit
-import { RingSpinner } from 'react-spinners-kit'
 // Redux
 import { connect } from 'react-redux';
 import { setCommandLineArguments, setExecutionState, setLanguage, setOutput } from '../app/master/master-actions';
@@ -27,12 +29,17 @@ import axios from 'axios';
 import { languageOptions as options, languageSet } from '../assets/languageOptions';
 
 
+// Pure functions
+import downloadFileUtil from '../functions/downloadAsFile';
+
 // const URL = "http://localhost:5000/execute/";
 const URL = "https://codeditorapi.azurewebsites.net/execute";
 
 const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setLanguage, input, setOutput }) => {
-    const [showSettings, setShowSettings] = React.useState(false);
-    const [showShareModel, setShowShareModel] = React.useState(false);
+    const [showSettings, setShowSettings] = useState(false);
+    const [showShareModel, setShowShareModel] = useState(false);
+    const [showImportCodeModel, setShowImportCodeModel] = useState(false);
+    const [showInfoModel, setShowInfoModel] = useState(false);
     const { enqueue } = useSnackbar(PLACEMENT.top);
 
     const handleRun = () => {
@@ -91,9 +98,8 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                                     }
                                 }}
                             >
-                                c
-                                <RingSpinner />
-                                deditor
+                                <img style={{ height: "33px", marginRight: "5px" }} src={Logo} alt="logo" />
+                                codeditor
                             </Heading>
                         </HeadingLevel>
                     </StyledNavigationItem>
@@ -110,6 +116,35 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                             error={language.length == 0}
                             mapOptionToString={(option) => option.label}
                         />
+                    </StyledNavigationItem>
+                    <StyledNavigationItem>
+                        <StatefulPopover
+                            content={() => (
+                                <p
+                                    style={{
+                                        padding: "15px",
+                                    }}
+                                >Download your code</p>
+                            )}
+                            showArrow
+                            accessibilityType={'tooltip'}
+                            triggerType={TRIGGER_TYPE.hover}
+                        >
+                            <Button
+                                size={SIZE.compact}
+                                shape={SHAPE.circle}
+                                onClick={() => downloadFileUtil(code, language, enqueue)}
+                                overrides={{
+                                    BaseButton: {
+                                        style: ({ $theme, $isSelected }) => ({
+                                            color: $theme.colors.accent300
+                                        })
+                                    }
+                                }}
+                            >
+                                <i className="fas fa-file-download"></i>
+                            </Button>
+                        </StatefulPopover>
                     </StyledNavigationItem>
                 </StyledNavigationList>
                 <StyledNavigationList $align={ALIGN.center}
@@ -142,7 +177,7 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                     </StyledNavigationItem>
                 </StyledNavigationList>
                 <StyledNavigationList $align={ALIGN.right} $style={{ marginRight: "10px" }}>
-                    <StyledNavigationItem>
+                    {/* <StyledNavigationItem>
                         <Input
                             value={cla}
                             onChange={(e) => setCLA(e.target.value)}
@@ -152,26 +187,50 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                             startEnhancer={() => <i className="fas fa-terminal"></i>}
                             clearOnEscape
                         />
-                    </StyledNavigationItem>
+                    </StyledNavigationItem> */}
                     <StyledNavigationItem>
                         <Button
-                            startEnhancer={() => <i className="fas fa-cog"></i>}
                             size={SIZE.compact}
-                            onClick={() => setShowSettings(true)}
-                        >Settings</Button>
+                            startEnhancer={() => <i className="fas fa-network-wired"></i>}
+                            onClick={() => setShowImportCodeModel(true)}
+                            shape={SHAPE.pill}
+                        >
+                            Import shared code
+                        </Button>
                     </StyledNavigationItem>
                     <StyledNavigationItem>
                         <Button
-                            startEnhancer={() => <i className="fas fa-share"></i>}
+                            startEnhancer={() => <i className="fas fa-share-alt"></i>}
                             size={SIZE.compact}
                             onClick={() => setShowShareModel(true)}
+                            shape={SHAPE.pill}
                         >Share</Button>
+                    </StyledNavigationItem>
+                    <StyledNavigationItem>
+                        <Button
+                            size={SIZE.compact}
+                            onClick={() => setShowSettings(true)}
+                            shape={SHAPE.circle}
+                        >
+                            <i className="fas fa-cog"></i>
+                        </Button>
+                    </StyledNavigationItem>
+                    <StyledNavigationItem>
+                        <Button
+                            size={SIZE.compact}
+                            shape={SHAPE.circle}
+                            onClick={() => setShowInfoModel(true)}
+                        >
+                            <i className="fas fa-info"></i>
+                        </Button>
                     </StyledNavigationItem>
                 </StyledNavigationList>
 
             </HeaderNavigation>
             <Settings showSettings={showSettings} setShowSettings={setShowSettings} />
             <Share show={showShareModel} setShow={setShowShareModel} />
+            <ImportSharedCode show={showImportCodeModel} setShow={setShowImportCodeModel} />
+            <InfoModel isOpen={showInfoModel} setIsOpen={setShowInfoModel} />
         </div >
     );
 }

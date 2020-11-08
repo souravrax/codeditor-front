@@ -10,7 +10,7 @@ const engine = new Styletron();
 
 
 // REDUX
-import { store, persistor } from './app/store';
+import { store, persistor } from './app/store'; // persistor is from redux-persist
 import { Provider } from 'react-redux';
 
 

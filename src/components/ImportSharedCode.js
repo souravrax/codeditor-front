@@ -11,10 +11,9 @@ import { useStyletron } from 'baseui';
 import { Input } from 'baseui/input'
 import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
 
-const Share = ({ show, setShow }) => {
-    const [isCopied, setIsCopied] = useState(false);
+const ImportSharedCode = ({ show, setShow }) => {
+    const [id, setId] = useState('');
     const [css, theme] = useStyletron();
-    const linkRef = React.useRef(null);
     return (
         <Modal
             onClose={() => {
@@ -26,34 +25,27 @@ const Share = ({ show, setShow }) => {
             size={SIZE.default}
             role={ROLE.dialog}
         >
-            <ModalHeader><h3>Share Your Code</h3></ModalHeader>
+            <ModalHeader><h3>Import Shared Code</h3></ModalHeader>
             <ModalBody>
                 <div className={css({ display: 'flex' })}>
                     <Input
-                        inputRef={linkRef}
-                        placeholder="Link"
-                        value="https://xyz.com/share/hash"
+                        placeholder="Shared ID"
+                        value={id}
+                        onChange={(e) => setId(e.target.value)}
                         autoFocus
                     />
                     <Button
+                        startEnhancer={()=><i className="fas fa-file-import"></i>}
                         kind={ButtonKind.primary}
-                        startEnhancer={() => <i className="fas fa-copy"></i>}
-                        onClick={() => {
-                            linkRef.current && linkRef.current.select();
-                            document.execCommand("copy")
-                            setIsCopied(true);
-                        }}
                     >
-                        Copy
+                        Import
                     </Button>
                 </div>
-                <span>{isCopied ? "Link copied to clipboard" : ""}</span>
             </ModalBody>
             <ModalFooter>
                 <ModalButton
                     onClick={() => {
                         setShow(false)
-                        setIsCopied(false);
                     }}
                     kind={ButtonKind.tertiary}>
                     Close
@@ -64,4 +56,4 @@ const Share = ({ show, setShow }) => {
     );
 };
 
-export default Share;
+export default ImportSharedCode;
