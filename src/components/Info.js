@@ -1,8 +1,20 @@
-import React from 'react'
-import { ModalHeader, ModalFooter, Modal, ModalBody, ModalButton, SIZE } from 'baseui/modal';
-import { KIND as ButtonKind } from 'baseui/button';
+import React from "react";
+import { useStyletron } from "baseui";
+import {
+    ModalHeader,
+    ModalFooter,
+    Modal,
+    ModalBody,
+    ModalButton,
+    SIZE,
+} from "baseui/modal";
+import { KIND as ButtonKind } from "baseui/button";
+import { Paragraph3 } from "baseui/typography";
+import { StyledLink } from "baseui/link";
+import GithubCorner from 'react-github-corner';
 
 function Info({ isOpen, setIsOpen }) {
+    const [css] = useStyletron();
     return (
         <div>
             <Modal
@@ -10,23 +22,79 @@ function Info({ isOpen, setIsOpen }) {
                 closeable
                 isOpen={isOpen}
                 size={SIZE.default}
+                overrides={{
+                    Dialog: {
+                        style: ({ $theme }) => ({
+                            border: `2px solid ${$theme.colors.accent}`
+                        })
+                    }
+                }}
             >
-                <ModalHeader>Hello world</ModalHeader>
+                <ModalHeader>
+                    <h3>Codeditor Info</h3>
+                </ModalHeader>
                 <ModalBody>
-                    Proin ut dui sed metus pharetra hend rerit vel non mi.
-                    Nulla ornare faucibus ex, non facilisis nisl. Maecenas
-                    aliquet mauris ut tempus.
-              </ModalBody>
-                <ModalFooter>
-                    <ModalButton kind={ButtonKind.tertiary}>
-                        Cancel
-                </ModalButton>
-                    <ModalButton>Okay</ModalButton>
+                    <Paragraph3>
+                        Codeditor is an IDE for editing, compiling and running
+                        source codes online made using React UI library and uses
+                        Redux for the state management and backed by
+                        NodeJS/Express server.
+                    </Paragraph3>
+                    <br />
+                    <Paragraph3>
+                        Github Repo:{" "}
+                        <StyledLink
+                            href={
+                                "https://github.com/souravrax/codeditor-front"
+                            }
+                            animateUnderline
+                        >https://github.com/souravrax/codeditor-front</StyledLink>
+                    </Paragraph3>
+                </ModalBody>
+                <ModalFooter
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <Paragraph3
+                        $style={{
+                            textAlign: "center",
+                        }}
+                    >
+                        Made with{" "}
+                        <span
+                            className={css({
+                                color: "red",
+                                fontWeight: "bold",
+                                fontSize: "1.6em",
+                            })}
+                        >
+                            &hearts;
+                        </span>{" "}
+                        by{" "}
+                        <StyledLink
+                            href="https://souravrakshit.me/"
+                            animateUnderline
+                        >
+                            Sourav Rakshit
+                        </StyledLink>
+                    </Paragraph3>
+                    <ModalButton
+                        kind={ButtonKind.primary}
+                        onClick={() => setIsOpen(false)}>
+                        Close
+                    </ModalButton>
                 </ModalFooter>
+                <GithubCorner
+                    direction="left"
+                    bannerColor="rgb(39 110 241)"
+                    size={60}
+                    href="https://github.com/souravrax/codeditor-front" />
             </Modal>
-        </div >
-    )
+        </div>
+    );
 }
 
-
-export default Info
+export default Info;

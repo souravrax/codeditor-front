@@ -134,13 +134,6 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                                 size={SIZE.compact}
                                 shape={SHAPE.circle}
                                 onClick={() => downloadFileUtil(code, language, enqueue)}
-                                overrides={{
-                                    BaseButton: {
-                                        style: ({ $theme, $isSelected }) => ({
-                                            color: $theme.colors.accent300
-                                        })
-                                    }
-                                }}
                             >
                                 <i className="fas fa-file-download"></i>
                             </Button>

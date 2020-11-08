@@ -29,7 +29,7 @@ const ImportSharedCode = ({ show, setShow }) => {
             <ModalBody>
                 <div className={css({ display: 'flex' })}>
                     <Input
-                        placeholder="Shared ID"
+                        placeholder="ID of the shared code"
                         value={id}
                         onChange={(e) => setId(e.target.value)}
                         autoFocus
