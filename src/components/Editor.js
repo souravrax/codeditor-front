@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 import { setCode } from '../app/master/master-actions'
 
-import languageToSyntax from '../res/mapLanguageToSyntax.json';
+import languageToSyntax from '../assets/mapLanguageToSyntax.json';
 
 class Editor extends Component {
     constructor(props) {

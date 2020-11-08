@@ -1,22 +1,19 @@
-import React, { useEffect, useRef } from "react";
+"use strict";
+import React from "react";
 
 // Baseui
-import { useStyletron } from 'baseui';
-import {
-    HeaderNavigation,
-    ALIGN,
-    StyledNavigationList,
-    StyledNavigationItem
-} from "baseui/header-navigation";
+import { HeaderNavigation, ALIGN, StyledNavigationList, StyledNavigationItem } from "baseui/header-navigation";
 import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
 import { Input } from 'baseui/input'
-
 import { Combobox } from 'baseui/combobox';
 import { Heading, HeadingLevel } from 'baseui/heading'
+import { useSnackbar, PLACEMENT, DURATION } from 'baseui/snackbar';
 
+// Custom Components
 import Settings from './Settings'
 import Share from './Share'
 
+// React spinners kit
 import { RingSpinner } from 'react-spinners-kit'
 // Redux
 import { connect } from 'react-redux';
@@ -25,18 +22,10 @@ import { setCommandLineArguments, setExecutionState, setLanguage, setOutput } fr
 // Connect to server
 import axios from 'axios';
 
-const options = [
-    { label: "Bash", id: "bash" },
-    { label: "C", id: "c" },
-    { label: "C++", id: "c++" },
-    { label: "C++14", id: "c++14" },
-    { label: "C++17", id: "c++17" },
-    { label: "Java", id: "java" },
-    { label: "Python 2", id: "py2" },
-    { label: "Python 3", id: "py3" },
-    { label: "Javascript", id: "nodejs" },
-    { label: "Go", id: "go" },
-];
+
+// Resource import 
+import { languageOptions as options, languageSet } from '../assets/languageOptions';
+
 
 // const URL = "http://localhost:5000/execute/";
 const URL = "https://codeditorapi.azurewebsites.net/execute";
@@ -44,10 +33,20 @@ const URL = "https://codeditorapi.azurewebsites.net/execute";
 const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setLanguage, input, setOutput }) => {
     const [showSettings, setShowSettings] = React.useState(false);
     const [showShareModel, setShowShareModel] = React.useState(false);
-    const [css] = useStyletron();
+    const { enqueue } = useSnackbar(PLACEMENT.top);
 
     const handleRun = () => {
         setIsExecuting(true);
+        if (!languageSet.find(language)) {
+            setIsExecuting(false);
+            enqueue({
+                startEnhancer: ({ size }) => <i className="fas fa-exclamation-triangle"></i>,
+                message: "Language is not valid, please select one from the dropdown"
+            },
+                DURATION.short
+            )
+            return;
+        }
         const payload = {
             code: code,
             cArgs: cla,

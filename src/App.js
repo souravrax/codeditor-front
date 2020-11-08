@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 // BaseWeb
 import { BaseProvider, LightTheme, DarkTheme } from "baseui"
+import { SnackbarProvider } from 'baseui/snackbar'
 
 
 // Component/Container Imports
@@ -17,7 +18,9 @@ const App = ({ theme }) => {
         <BaseProvider
             theme={theme.toLowerCase() == "light" ? LightTheme : DarkTheme}
         >
-            <MainPage />
+            <SnackbarProvider>
+                <MainPage />
+            </SnackbarProvider>
         </BaseProvider>
     )
 }

@@ -2,7 +2,7 @@
 
 ## Screenshot
 
-![alt text](./src/res/screenshot.png)
+![alt text](./src/assets/screenshot.png)
 
 Codeditor is an IDE for editing, compiling and running source codes online made using React UI library and uses Redux for the state management. It is backed by NodeJS/Express [server](https://github.com/souravrax/codeditor-back).
 
