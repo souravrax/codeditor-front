@@ -1,4 +1,5 @@
 # Codeditor
+![React build and deploy to firebase](https://github.com/souravrax/codeditor-front/workflows/React%20build%20and%20deploy%20to%20firebase/badge.svg?branch=master)
 
 ## Screenshot
 
