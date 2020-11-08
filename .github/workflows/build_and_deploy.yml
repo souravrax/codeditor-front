@@ -1,0 +1,22 @@
+name: React build and deploy to firebase
+on:
+  push:
+    branches: [ master ]
+  
+jobs:
+  build_and_deploy:
+     name: Build and deploy
+     runs-on: [ubuntu-latest]
+     steps:
+       - name: Checkout Repo
+         uses: actions/checkout@v2
+       - name: Install Dependencies
+         uses: npm install
+       - name: Build Webpack Module
+         uses: npm run build
+       - name: Deploy to Firebase
+         uses: w9jds/firebase-action@master
+         with:
+           args: deploy
+         env: 
+           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
