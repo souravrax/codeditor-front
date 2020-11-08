@@ -11,9 +11,9 @@ jobs:
        - name: Checkout Repo
          uses: actions/checkout@v2
        - name: Install Dependencies
-         uses: npm install
+         run: npm install
        - name: Build Webpack Module
-         uses: npm run build
+         run: npm run build
        - name: Deploy to Firebase
          uses: w9jds/firebase-action@master
          with:
