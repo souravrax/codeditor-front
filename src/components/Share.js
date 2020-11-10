@@ -24,12 +24,14 @@ const Share = ({ show, setShow, code, language, input }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [clicked, setClicked] = useState(false);
     const [id, setId] = useState("");
+    const [copied, setCopied] = useState(false);
 
     const [expire, setExpire] = useState({ label: "5 minutes", value: "1" });
 
     const shareHandler = () => {
         setClicked(true);
         setIsLoading(true);
+        setCopied(false);
         exportHandler(code, language, input, expire, setIsLoading, setId);
     };
 
@@ -74,7 +76,6 @@ const Share = ({ show, setShow, code, language, input }) => {
                             style: ({ $theme }) => ({
                                 width: "100%",
                                 marginTop: 0,
-                                marginBottom: "20px",
                                 borderTopLeftRadius: $theme.borders.radius200,
                                 borderTopRightRadius: $theme.borders.radius200,
                                 borderBottomRightRadius:
@@ -92,48 +93,62 @@ const Share = ({ show, setShow, code, language, input }) => {
                             marginRight: "10px",
                         }}
                     ></i>
-                    Share
+                    Get Share ID
                 </Button>
                 {/* Copying the ID */}
-                {clicked ? (
-                    isLoading ? (
-                        <Skeleton
-                            rows={0}
-                            height={"40px"}
-                            width={"100%"}
-                            animation
-                        />
-                    ) : (
-                        <div className={css({ display: "flex" })}>
-                            <Input
-                                inputRef={linkRef}
-                                placeholder="Link"
-                                value={id}
-                                size={SIZE.compact}
+                <div className={css({ display: "flex", marginTop: "15px" })}>
+                    {clicked ? (
+                        isLoading ? (
+                            <Skeleton
+                                rows={0}
+                                height={"40px"}
+                                width={"100%"}
+                                animation
                             />
-                            <Button
-                                kind={ButtonKind.primary}
-                                size={SIZE.compact}
-                                startEnhancer={() => (
-                                    <i className="fas fa-copy"></i>
-                                )}
-                                onClick={() => {
-                                    linkRef.current && linkRef.current.select();
-                                    document.execCommand("copy");
-                                }}
-                            >
-                                Copy
-                            </Button>
-                        </div>
-                    )
-                ) : (
-                    <Skeleton
-                        rows={0}
-                        height={"40px"}
-                        width={"100%"}
-                        animation
-                    />
-                )}
+                        ) : (
+                            <>
+                                <Input
+                                    inputRef={linkRef}
+                                    placeholder="Link"
+                                    value={id}
+                                    size={SIZE.compact}
+                                    startEnhancer={()=><i className="fas fa-key"></i>}
+                                />
+                                <Button
+                                    kind={ButtonKind.primary}
+                                    size={SIZE.compact}
+                                    startEnhancer={() => (
+                                        <i className="fas fa-copy"></i>
+                                    )}
+                                    onClick={() => {
+                                        linkRef.current &&
+                                            linkRef.current.select();
+                                        document.execCommand("copy");
+                                        setCopied(true);
+                                        setTimeout(() => {
+                                            setCopied(false);
+                                        }, 2000);
+                                    }}
+                                >
+                                    Copy
+                                </Button>
+                            </>
+                        )
+                    ) : (
+                        // <Skeleton
+                        //     rows={0}
+                        //     height={"40px"}
+                        //     width={"100%"}
+                        //     animation
+                        // />
+                        <></>
+                    )}
+                </div>
+                {copied && <p
+                    className={css({
+                        color: theme.colors.positive300
+                    })}
+                >Copied to your clipboard 🎉, share this key with others 😀</p>}
             </ModalBody>
             <ModalFooter>
                 <ModalButton
