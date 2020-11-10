@@ -1,33 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
     Modal,
     ModalHeader,
     ModalBody,
     ModalFooter,
     ModalButton,
-    ROLE
+    ROLE,
 } from "baseui/modal";
-import { useStyletron } from 'baseui';
-import { Input } from 'baseui/input'
+import { useStyletron } from "baseui";
+import { Input } from "baseui/input";
 import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
 
-const ImportSharedCode = ({ show, setShow }) => {
-    const [id, setId] = useState('');
+import importHandler from "../controllers/importHandler";
+
+import { connect } from "react-redux";
+import {
+    setCode,
+    setLanguage,
+    setInput,
+    setOutput,
+} from "../app/master/master-actions";
+
+const ImportSharedCode = ({
+    show,
+    setShow,
+    setCode,
+    setInput,
+    setLanguage,
+    setOutput,
+}) => {
+    const [id, setId] = useState("");
     const [css, theme] = useStyletron();
+    const [isLoading, setIsLoading] = useState(false);
     return (
         <Modal
             onClose={() => {
                 setShow(false);
-                setIsCopied(false);
             }}
             closeable
             isOpen={show}
             size={SIZE.default}
             role={ROLE.dialog}
         >
-            <ModalHeader><h3>Import Shared Code</h3></ModalHeader>
+            <ModalHeader>
+                <h3>Import Shared Code</h3>
+            </ModalHeader>
             <ModalBody>
-                <div className={css({ display: 'flex' })}>
+                <div className={css({ display: "flex" })}>
                     <Input
                         placeholder="ID of the shared code"
                         value={id}
@@ -35,8 +54,24 @@ const ImportSharedCode = ({ show, setShow }) => {
                         autoFocus
                     />
                     <Button
-                        startEnhancer={()=><i className="fas fa-file-import"></i>}
+                        startEnhancer={() => (
+                            <i className="fas fa-file-import"></i>
+                        )}
                         kind={ButtonKind.primary}
+                        isLoading={isLoading}
+                        onClick={() => {
+                            console.log("called");
+                            setIsLoading(true);
+                            importHandler(
+                                id,
+                                setIsLoading,
+                                setCode,
+                                setInput,
+                                setLanguage,
+                                setShow
+                            );
+                            setOutput("");
+                        }}
                     >
                         Import
                     </Button>
@@ -45,15 +80,22 @@ const ImportSharedCode = ({ show, setShow }) => {
             <ModalFooter>
                 <ModalButton
                     onClick={() => {
-                        setShow(false)
+                        setShow(false);
                     }}
-                    kind={ButtonKind.tertiary}>
+                    kind={ButtonKind.tertiary}
+                >
                     Close
                 </ModalButton>
             </ModalFooter>
         </Modal>
-
     );
 };
 
-export default ImportSharedCode;
+const mapDispatchToProps = (dispatch) => ({
+    setCode: (code) => dispatch(setCode(code)),
+    setLanguage: (language) => dispatch(setLanguage(language)),
+    setInput: (input) => dispatch(setInput(input)),
+    setOutput: (output) => dispatch(setOutput(output)),
+});
+
+export default connect(null, mapDispatchToProps)(ImportSharedCode);
