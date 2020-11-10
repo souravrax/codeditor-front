@@ -4,15 +4,15 @@ const URL = `https://codeditorapi.azurewebsites.net/share/export`;
 // const URL = `http://localhost:5000/share/export`;
 
 const exportHandler = (code, language, input, expire, setIsLoading, setId) => {
-    console.log({
-        code: code,
-        language: language,
-        input: input,
-        expire: expire,
-        setIsLoading: setIsLoading,
-        setId,
-        setId,
-    });
+    // console.log({
+    //     code: code,
+    //     language: language,
+    //     input: input,
+    //     expire: expire,
+    //     setIsLoading: setIsLoading,
+    //     setId,
+    //     setId,
+    // });
     Axios.post(URL, {
         code: code,
         language: language,
