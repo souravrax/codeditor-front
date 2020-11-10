@@ -30,7 +30,7 @@ import { languageOptions as options, languageSet } from '../assets/languageOptio
 
 
 // Pure functions
-import downloadFileUtil from '../functions/downloadAsFile';
+import downloadFileUtil from '../controllers/downloadAsFile';
 
 // const URL = "http://localhost:5000/execute/";
 const URL = "https://codeditorapi.azurewebsites.net/execute";
