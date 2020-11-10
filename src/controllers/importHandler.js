@@ -1,6 +1,9 @@
 import Axios from "axios";
 
-const URL = `https://codeditorapi.azurewebsites.net/share/import`;
+const URL =
+    process.env.NODE_ENV == "development"
+        ? `http://localhost:5000/share/import`
+        : `https://codeditorapi.azurewebsites.net/share/import`;
 
 const importHandler = (
     id,
@@ -23,6 +26,7 @@ const importHandler = (
     })
         .then((response) => {
             isLoading(false);
+            console.log(response);
             if (response.data.success) {
                 console.log(response.data.data);
                 const { code, input, language } = response.data.data;
@@ -34,6 +38,7 @@ const importHandler = (
             }
         })
         .catch((error) => {
+            isLoading(false);
             console.log(error);
             return "";
         });

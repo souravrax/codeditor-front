@@ -2,40 +2,63 @@
 import React, { useState } from "react";
 
 // Baseui
-import { HeaderNavigation, ALIGN, StyledNavigationList, StyledNavigationItem } from "baseui/header-navigation";
+import {
+    HeaderNavigation,
+    ALIGN,
+    StyledNavigationList,
+    StyledNavigationItem,
+} from "baseui/header-navigation";
 import { Button, SIZE, SHAPE, KIND as ButtonKind, KIND } from "baseui/button";
-import { Input } from 'baseui/input'
-import { Combobox } from 'baseui/combobox';
-import { Heading, HeadingLevel } from 'baseui/heading'
-import { useSnackbar, PLACEMENT, DURATION } from 'baseui/snackbar';
-import { StatefulPopover, TRIGGER_TYPE } from 'baseui/popover';
+import { Input } from "baseui/input";
+import { Combobox } from "baseui/combobox";
+import { Heading, HeadingLevel } from "baseui/heading";
+import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
+import { StatefulPopover, TRIGGER_TYPE } from "baseui/popover";
 
 // Custom Components
-import Settings from './Settings'
-import Share from './Share'
-import ImportSharedCode from './ImportSharedCode';
-import Logo from '../assets/logo.png';
-import InfoModel from '../components/Info';
+import Settings from "./Settings";
+import Share from "./Share";
+import ImportSharedCode from "./ImportSharedCode";
+import Logo from "../assets/logo.png";
+import InfoModel from "../components/Info";
 
 // Redux
-import { connect } from 'react-redux';
-import { setCommandLineArguments, setExecutionState, setLanguage, setOutput } from '../app/master/master-actions';
+import { connect } from "react-redux";
+import {
+    setCommandLineArguments,
+    setExecutionState,
+    setLanguage,
+    setOutput,
+} from "../app/master/master-actions";
 
 // Connect to server
-import axios from 'axios';
+import axios from "axios";
 
-
-// Resource import 
-import { languageOptions as options, languageSet } from '../assets/languageOptions';
-
+// Resource import
+import {
+    languageOptions as options,
+    languageSet,
+} from "../assets/languageOptions";
 
 // Pure functions
-import downloadFileUtil from '../controllers/downloadAsFile';
+import downloadFileUtil from "../controllers/downloadAsFile";
 
-// const URL = "http://localhost:5000/execute/";
-const URL = "https://codeditorapi.azurewebsites.net/execute";
+const URL =
+    process.env.NODE_ENV == "development"
+        ? "http://localhost:5000/execute/"
+        : "https://codeditorapi.azurewebsites.net/execute";
 
-const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setLanguage, input, setOutput }) => {
+const NavBar = ({
+    code,
+    isExecuting,
+    setIsExecuting,
+    cla,
+    setCLA,
+    language,
+    setLanguage,
+    input,
+    setOutput,
+}) => {
     const [showSettings, setShowSettings] = useState(false);
     const [showShareModel, setShowShareModel] = useState(false);
     const [showImportCodeModel, setShowImportCodeModel] = useState(false);
@@ -46,32 +69,37 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
         setIsExecuting(true);
         if (!languageSet.find(language)) {
             setIsExecuting(false);
-            enqueue({
-                startEnhancer: ({ size }) => <i className="fas fa-exclamation-triangle"></i>,
-                message: "Language is not valid, please select one from the dropdown"
-            },
+            enqueue(
+                {
+                    startEnhancer: ({ size }) => (
+                        <i className="fas fa-exclamation-triangle"></i>
+                    ),
+                    message:
+                        "Language is not valid, please select one from the dropdown",
+                },
                 DURATION.short
-            )
+            );
             return;
         }
         const payload = {
             code: code,
             cArgs: cla,
             language: language,
-            input: input
-        }
+            input: input,
+        };
         console.table(payload);
-        axios.post(URL, payload)
-            .then(response => {
+        axios
+            .post(URL, payload)
+            .then((response) => {
                 setIsExecuting(false);
                 console.log("Response: ", response);
                 setOutput(response.data.output);
             })
-            .catch(error => {
+            .catch((error) => {
                 setIsExecuting(false);
                 console.log(error);
             });
-    }
+    };
 
     return (
         <div>
@@ -80,7 +108,7 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                     <StyledNavigationItem
                         $style={{
                             color: "#fff",
-                            fontFamily: "Poppins"
+                            fontFamily: "Poppins",
                         }}
                     >
                         <HeadingLevel>
@@ -94,11 +122,18 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                                             alignItems: "center",
                                             justifyContent: "space-between",
                                             fontFamily: `"Comfortaa", cursive`,
-                                        })
-                                    }
+                                        }),
+                                    },
                                 }}
                             >
-                                <img style={{ height: "33px", marginRight: "5px" }} src={Logo} alt="logo" />
+                                <img
+                                    style={{
+                                        height: "33px",
+                                        marginRight: "5px",
+                                    }}
+                                    src={Logo}
+                                    alt="logo"
+                                />
                                 codeditor
                             </Heading>
                         </HeadingLevel>
@@ -106,7 +141,7 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                     <StyledNavigationItem>
                         <Combobox
                             value={language}
-                            onChange={lang => {
+                            onChange={(lang) => {
                                 setLanguage(lang);
                                 console.log(lang);
                             }}
@@ -124,35 +159,44 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                                     style={{
                                         padding: "15px",
                                     }}
-                                >Download your code</p>
+                                >
+                                    Download your code
+                                </p>
                             )}
                             showArrow
-                            accessibilityType={'tooltip'}
+                            accessibilityType={"tooltip"}
                             triggerType={TRIGGER_TYPE.hover}
                         >
                             <Button
                                 size={SIZE.compact}
                                 shape={SHAPE.circle}
-                                onClick={() => downloadFileUtil(code, language, enqueue)}
+                                onClick={() =>
+                                    downloadFileUtil(code, language, enqueue)
+                                }
                             >
                                 <i className="fas fa-file-download"></i>
                             </Button>
                         </StatefulPopover>
                     </StyledNavigationItem>
                 </StyledNavigationList>
-                <StyledNavigationList $align={ALIGN.center}
-                >
+                <StyledNavigationList $align={ALIGN.center}>
                     <StyledNavigationItem>
                         <Button
                             size={SIZE.compact}
-                            startEnhancer={() => <i className="fas fa-play"></i>}
+                            startEnhancer={() => (
+                                <i className="fas fa-play"></i>
+                            )}
                             isLoading={isExecuting}
                             onClick={handleRun}
                             overrides={{
                                 BaseButton: {
                                     style: ({ $theme, $isLoading }) => {
                                         return {
-                                            backgroundColor: `${$isLoading ? $theme.colors.positive200 : $theme.colors.positive300}`,
+                                            backgroundColor: `${
+                                                $isLoading
+                                                    ? $theme.colors.positive200
+                                                    : $theme.colors.positive300
+                                            }`,
                                             borderTopLeftRadius: `${$theme.borders.radius200} !important`,
                                             borderTopRightRadius: `${$theme.borders.radius200} !important`,
                                             borderBottomLeftRadius: `${$theme.borders.radius200} !important`,
@@ -161,15 +205,21 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                                             paddingBottom: "10px",
                                             paddingLeft: "30px",
                                             paddingRight: "30px",
-                                            boxShadow: `${$theme.lighting.shadow400}`
-                                        }
-                                    }
-                                }
+                                            boxShadow: `${$theme.lighting.shadow400}`,
+                                        };
+                                    },
+                                },
                             }}
-                        > Run </Button>
+                        >
+                            {" "}
+                            Run{" "}
+                        </Button>
                     </StyledNavigationItem>
                 </StyledNavigationList>
-                <StyledNavigationList $align={ALIGN.right} $style={{ marginRight: "10px" }}>
+                <StyledNavigationList
+                    $align={ALIGN.right}
+                    $style={{ marginRight: "10px" }}
+                >
                     {/* <StyledNavigationItem>
                         <Input
                             value={cla}
@@ -184,7 +234,9 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                     <StyledNavigationItem>
                         <Button
                             size={SIZE.compact}
-                            startEnhancer={() => <i className="fas fa-network-wired"></i>}
+                            startEnhancer={() => (
+                                <i className="fas fa-network-wired"></i>
+                            )}
                             onClick={() => setShowImportCodeModel(true)}
                             shape={SHAPE.pill}
                         >
@@ -193,11 +245,15 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                     </StyledNavigationItem>
                     <StyledNavigationItem>
                         <Button
-                            startEnhancer={() => <i className="fas fa-share-alt"></i>}
+                            startEnhancer={() => (
+                                <i className="fas fa-share-alt"></i>
+                            )}
                             size={SIZE.compact}
                             onClick={() => setShowShareModel(true)}
                             shape={SHAPE.pill}
-                        >Share</Button>
+                        >
+                            Share
+                        </Button>
                     </StyledNavigationItem>
                     <StyledNavigationItem>
                         <Button
@@ -218,29 +274,34 @@ const NavBar = ({ code, isExecuting, setIsExecuting, cla, setCLA, language, setL
                         </Button>
                     </StyledNavigationItem>
                 </StyledNavigationList>
-
             </HeaderNavigation>
-            <Settings showSettings={showSettings} setShowSettings={setShowSettings} />
+            <Settings
+                showSettings={showSettings}
+                setShowSettings={setShowSettings}
+            />
             <Share show={showShareModel} setShow={setShowShareModel} />
-            <ImportSharedCode show={showImportCodeModel} setShow={setShowImportCodeModel} />
+            <ImportSharedCode
+                show={showImportCodeModel}
+                setShow={setShowImportCodeModel}
+            />
             <InfoModel isOpen={showInfoModel} setIsOpen={setShowInfoModel} />
-        </div >
+        </div>
     );
-}
+};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     isExecuting: state.master.isExecuting,
     language: state.master.language,
     cla: state.master.commandLineArguments,
     input: state.master.input,
-    code: state.master.code
-})
+    code: state.master.code,
+});
 
-const mapDispatchToProps = dispatch => ({
-    setIsExecuting: value => dispatch(setExecutionState(value)),
-    setLanguage: language => dispatch(setLanguage(language)),
-    setCLA: cla => dispatch(setCommandLineArguments(cla)),
-    setOutput: output => dispatch(setOutput(output))
-})
+const mapDispatchToProps = (dispatch) => ({
+    setIsExecuting: (value) => dispatch(setExecutionState(value)),
+    setLanguage: (language) => dispatch(setLanguage(language)),
+    setCLA: (cla) => dispatch(setCommandLineArguments(cla)),
+    setOutput: (output) => dispatch(setOutput(output)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
