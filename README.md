@@ -1,10 +1,18 @@
-# Codeditor
+<p align="center">
+<img width="100" height="auto" src="./public/images/logo512.png">
+</p>
+<h1 align="center">Codeditor</h1>
+
 ![React build and deploy to firebase](https://github.com/souravrax/codeditor-front/workflows/React%20build%20and%20deploy%20to%20firebase/badge.svg?branch=master)
+![build succeeded](https://img.shields.io/badge/build-succeeded-brightgreen.svg)
+![Test passing](https://img.shields.io/badge/Tests-passing-brightgreen.svg)
+![Backend Running](https://img.shields.io/badge/Backend-Running-brightgreen.svg)
 
 ## Screenshot
 
-
-![alt text](./src/assets/screenshot.png)
+<p align="center">
+<img width="500" height="auto" src="./src/assets/screenshot.png">
+</p>
 
 Codeditor is an IDE for editing, compiling and running source codes online made using React UI library and uses Redux for the state management. It is backed by NodeJS/Express [server](https://github.com/souravrax/codeditor-back).
 
