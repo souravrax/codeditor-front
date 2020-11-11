@@ -104,6 +104,8 @@ const ImportSharedCode = ({
                 setShow(false);
             }}
             closeable
+            animate
+            autoFocus
             isOpen={show}
             size={SIZE.default}
             role={ROLE.dialog}
