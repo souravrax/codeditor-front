@@ -11,8 +11,19 @@ const importHandler = (
     setCode,
     setInput,
     setLanguage,
-    setShow
+    setShow,
+    enqueue
 ) => {
+    if (id.length !== 24) {
+        isLoading(false);
+        enqueue({
+            message: "ID is not valid",
+            startEnhancer: () => (
+                <i className="fas fa-exclamation-triangle"></i>
+            ),
+        });
+        return;
+    }
     console.log({
         id: id,
         isLoading: isLoading,
@@ -35,11 +46,24 @@ const importHandler = (
                 setLanguage(language);
                 isLoading(false);
                 setShow(false);
+            } else {
+                enqueue({
+                    message: "Something went wrong",
+                    startEnhancer: () => (
+                        <i className="fas fa-exclamation-triangle"></i>
+                    ),
+                });
             }
         })
         .catch((error) => {
             isLoading(false);
             console.log(error);
+            enqueue({
+                message: "Something went wrong",
+                startEnhancer: () => (
+                    <i className="fas fa-exclamation-triangle"></i>
+                ),
+            });
             return "";
         });
 };

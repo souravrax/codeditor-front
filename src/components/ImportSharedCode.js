@@ -10,6 +10,7 @@ import {
 import { useStyletron } from "baseui";
 import { Input } from "baseui/input";
 import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
+import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
 
 import importHandler from "../controllers/importHandler";
 
@@ -21,6 +22,70 @@ import {
     setOutput,
 } from "../app/master/master-actions";
 
+const Body = ({
+    id,
+    setCode,
+    setInput,
+    setLanguage,
+    setShow,
+    enqueue,
+    isLoading,
+    setIsLoading,
+    importHandler,
+    setId,
+}) => {
+    const [css] = useStyletron();
+    return (
+        <>
+            <div className={css({ display: "flex" })}>
+                <Input
+                    placeholder="ID of the shared code"
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                    autoFocus
+                />
+                <Button
+                    startEnhancer={() => <i className="fas fa-file-import"></i>}
+                    kind={ButtonKind.primary}
+                    isLoading={isLoading}
+                    onClick={() => {
+                        // console.log("called");
+                        setIsLoading(true);
+                        importHandler(
+                            id,
+                            setIsLoading,
+                            setCode,
+                            setInput,
+                            setLanguage,
+                            setShow,
+                            enqueue
+                        );
+                        setOutput("");
+                    }}
+                >
+                    Import
+                </Button>
+            </div>
+            <p
+                className={css({
+                    marginTop: "10px",
+                    width: "100%",
+                })}
+            >
+                <i
+                    className={
+                        `fas fa-info-circle ` +
+                        css({
+                            marginRight: "5px",
+                        })
+                    }
+                ></i>
+                Enter the share ID to fetch the code
+            </p>
+        </>
+    );
+};
+
 const ImportSharedCode = ({
     show,
     setShow,
@@ -30,8 +95,9 @@ const ImportSharedCode = ({
     setOutput,
 }) => {
     const [id, setId] = useState("");
-    const [css, theme] = useStyletron();
+    const [css] = useStyletron();
     const [isLoading, setIsLoading] = useState(false);
+    const { enqueue } = useSnackbar();
     return (
         <Modal
             onClose={() => {
@@ -46,36 +112,18 @@ const ImportSharedCode = ({
                 <h3>Import Shared Code</h3>
             </ModalHeader>
             <ModalBody>
-                <div className={css({ display: "flex" })}>
-                    <Input
-                        placeholder="ID of the shared code"
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
-                        autoFocus
-                    />
-                    <Button
-                        startEnhancer={() => (
-                            <i className="fas fa-file-import"></i>
-                        )}
-                        kind={ButtonKind.primary}
-                        isLoading={isLoading}
-                        onClick={() => {
-                            console.log("called");
-                            setIsLoading(true);
-                            importHandler(
-                                id,
-                                setIsLoading,
-                                setCode,
-                                setInput,
-                                setLanguage,
-                                setShow
-                            );
-                            setOutput("");
-                        }}
-                    >
-                        Import
-                    </Button>
-                </div>
+                <Body
+                    enqueue={enqueue}
+                    id={id}
+                    importHandler={importHandler}
+                    isLoading={isLoading}
+                    setCode={setCode}
+                    setId={setId}
+                    setInput={setInput}
+                    setIsLoading={setIsLoading}
+                    setLanguage={setLanguage}
+                    setShow={setShow}
+                />
             </ModalBody>
             <ModalFooter>
                 <ModalButton

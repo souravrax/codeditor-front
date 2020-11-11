@@ -13,10 +13,31 @@ import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
 import { FormControl } from "baseui/form-control";
 import Select from "react-select";
 import { Skeleton } from "baseui/skeleton";
+import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
 
 import { connect } from "react-redux";
 
 import exportHandler from "../controllers/exportHandler";
+import { languageSet } from "../assets/languageOptions";
+
+const snackBarNegative = {
+    Root: {
+        style: ({ $theme }) => ({
+            backgroundColor: `${$theme.colors.negative400}`,
+        }),
+    },
+    Message: {
+        style: () => ({
+            color: "#fff",
+            fontWeight: "600",
+        }),
+    },
+    StartEnhancerContainer: {
+        style: () => ({
+            color: "#fff",
+        }),
+    },
+};
 
 const Share = ({ show, setShow, code, language, input }) => {
     const [css, theme] = useStyletron();
@@ -25,10 +46,30 @@ const Share = ({ show, setShow, code, language, input }) => {
     const [clicked, setClicked] = useState(false);
     const [id, setId] = useState("");
     const [copied, setCopied] = useState(false);
+    const { enqueue } = useSnackbar();
 
     const [expire, setExpire] = useState({ label: "5 minutes", value: "1" });
 
     const shareHandler = () => {
+        if (code.length === 0) {
+            enqueue({
+                startEnhancer: () => (
+                    <i className="fas fa-exclamation-triangle"></i>
+                ),
+                overrides: snackBarNegative,
+                message: "Code should not be blank",
+            });
+            return;
+        } else if (!languageSet.find(language)) {
+            enqueue({
+                startEnhancer: () => (
+                    <i className="fas fa-exclamation-triangle"></i>
+                ),
+                overrides: snackBarNegative,
+                message: "Choose a valid language",
+            });
+            return;
+        }
         setClicked(true);
         setIsLoading(true);
         setCopied(false);
@@ -93,7 +134,7 @@ const Share = ({ show, setShow, code, language, input }) => {
                             marginRight: "10px",
                         }}
                     ></i>
-                    Get Share ID
+                    Share
                 </Button>
                 {/* Copying the ID */}
                 <div className={css({ display: "flex", marginTop: "15px" })}>
@@ -112,7 +153,9 @@ const Share = ({ show, setShow, code, language, input }) => {
                                     placeholder="Link"
                                     value={id}
                                     size={SIZE.compact}
-                                    startEnhancer={()=><i className="fas fa-key"></i>}
+                                    startEnhancer={() => (
+                                        <i className="fas fa-key"></i>
+                                    )}
                                 />
                                 <Button
                                     kind={ButtonKind.primary}
@@ -135,20 +178,29 @@ const Share = ({ show, setShow, code, language, input }) => {
                             </>
                         )
                     ) : (
-                        // <Skeleton
-                        //     rows={0}
-                        //     height={"40px"}
-                        //     width={"100%"}
-                        //     animation
-                        // />
-                        <></>
+                        <p>
+                            <i
+                                className={
+                                    `fas fa-info-circle ` +
+                                    css({
+                                        marginRight: "5px",
+                                    })
+                                }
+                            ></i>
+                            Click Share to get the share ID
+                        </p>
                     )}
                 </div>
-                {copied && <p
-                    className={css({
-                        color: theme.colors.positive300
-                    })}
-                >Copied to your clipboard 🎉, share this key with others 😀</p>}
+                {copied && (
+                    <p
+                        className={css({
+                            color: theme.colors.positive300,
+                        })}
+                    >
+                        Copied to your clipboard 🎉, share this key with others
+                        😀
+                    </p>
+                )}
             </ModalBody>
             <ModalFooter>
                 <ModalButton
