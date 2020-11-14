@@ -7,6 +7,8 @@
 ![build succeeded](https://img.shields.io/badge/build-succeeded-brightgreen.svg)
 ![Test passing](https://img.shields.io/badge/Tests-passing-brightgreen.svg)
 ![Backend Running](https://img.shields.io/badge/Backend-Running-brightgreen.svg)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/dcd50096-8d72-4321-9fc1-40c9b8ca9e79/deploy-status)](https://app.netlify.com/sites/codeditorproject/deploys)
+
 
 ## Screenshot
 
