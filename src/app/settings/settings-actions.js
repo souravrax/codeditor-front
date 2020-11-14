@@ -1,34 +1,44 @@
-export const setTheme = theme => ({
+export const setTheme = (theme) => ({
     type: "SET_THEME",
-    payload: theme
-})
+    payload: theme,
+});
 
-export const setMinimap = value => ({
+export const setMinimap = (value) => ({
     type: "SET_MINIMAP",
-    payload: value
-})
+    payload: value,
+});
 
-export const setShowUnused = value => ({
+export const setShowUnused = (value) => ({
     type: "SET_SHOW_UNUSED",
-    payload: value
-})
+    payload: value,
+});
 
-export const setShowFoldingControls = value => ({
+export const setShowFoldingControls = (value) => ({
     type: "SET_SHOW_FOLDING_CONTROLS",
-    payload: value
-})
+    payload: value,
+});
 
-export const setSelectOnLineNumber = value => ({
+export const setSelectOnLineNumber = (value) => ({
     type: "SET_SELECT_ON_LINE_NUMBER",
-    payload: value
-})
+    payload: value,
+});
 
-export const setScrollbar = value => ({
+export const setScrollbar = (value) => ({
     type: "SET_SCROLLBAR",
-    payload: value
-})
+    payload: value,
+});
 
-export const setQuickSuggestion = value => ({
+export const setQuickSuggestion = (value) => ({
     type: "SET_QUICK_SUGGESTION",
-    payload: value
-})
+    payload: value,
+});
+
+export default {
+    setTheme,
+    setShowFoldingControls,
+    setShowUnused,
+    setQuickSuggestion,
+    setScrollbar,
+    setMinimap,
+    setSelectOnLineNumber,
+};

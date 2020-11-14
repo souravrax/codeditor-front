@@ -19,6 +19,7 @@ const masterPersistConfig = {
 } // Configuration for the master reducer 
 // ============ CONFIGURATION ENDS ==================
 
+// Combining the reducers
 const rootReducer = combineReducers({
     settings: settingsReducer,
     master: persistReducer(masterPersistConfig, masterReducer),
