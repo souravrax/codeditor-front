@@ -11,7 +11,7 @@ import {
 import { KIND as ButtonKind } from "baseui/button";
 import { Paragraph3 } from "baseui/typography";
 import { StyledLink } from "baseui/link";
-import GithubCorner from 'react-github-corner';
+import GithubCorner from "react-github-corner";
 
 function Info({ isOpen, setIsOpen }) {
     const [css] = useStyletron();
@@ -22,12 +22,13 @@ function Info({ isOpen, setIsOpen }) {
                 closeable
                 isOpen={isOpen}
                 size={SIZE.default}
+                unstable_ModalBackdropScroll={true}
                 overrides={{
                     Dialog: {
                         style: ({ $theme }) => ({
-                            border: `2px solid ${$theme.colors.accent}`
-                        })
-                    }
+                            border: `2px solid ${$theme.colors.accent}`,
+                        }),
+                    },
                 }}
             >
                 <ModalHeader>
@@ -42,13 +43,26 @@ function Info({ isOpen, setIsOpen }) {
                     </Paragraph3>
                     <br />
                     <Paragraph3>
-                        Github Repo:{" "}
+                        Github Repo(frontend):{" "}
                         <StyledLink
                             href={
                                 "https://github.com/souravrax/codeditor-front"
                             }
+                            target="_blank"
                             animateUnderline
-                        >https://github.com/souravrax/codeditor-front</StyledLink>
+                        >
+                            https://github.com/souravrax/codeditor-front
+                        </StyledLink>
+                    </Paragraph3>
+                    <Paragraph3>
+                        Github Repo(backend):{" "}
+                        <StyledLink
+                            href={"https://github.com/souravrax/codeditor-back"}
+                            target="_blank"
+                            animateUnderline
+                        >
+                            https://github.com/souravrax/codeditor-back
+                        </StyledLink>
                     </Paragraph3>
                 </ModalBody>
                 <ModalFooter
@@ -75,6 +89,7 @@ function Info({ isOpen, setIsOpen }) {
                         </span>{" "}
                         by{" "}
                         <StyledLink
+                            target="_blank"
                             href="https://souravrakshit.me/"
                             animateUnderline
                         >
@@ -83,7 +98,8 @@ function Info({ isOpen, setIsOpen }) {
                     </Paragraph3>
                     <ModalButton
                         kind={ButtonKind.primary}
-                        onClick={() => setIsOpen(false)}>
+                        onClick={() => setIsOpen(false)}
+                    >
                         Close
                     </ModalButton>
                 </ModalFooter>
@@ -91,7 +107,9 @@ function Info({ isOpen, setIsOpen }) {
                     direction="left"
                     bannerColor="rgb(39 110 241)"
                     size={60}
-                    href="https://github.com/souravrax/codeditor-front" />
+                    target="_blank"
+                    href="https://github.com/souravrax/codeditor-front"
+                />
             </Modal>
         </div>
     );

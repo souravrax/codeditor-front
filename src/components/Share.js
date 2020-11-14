@@ -93,6 +93,7 @@ const Share = ({ show, setShow, code, language, input }) => {
             closeable
             isOpen={show}
             size={SIZE.default}
+            unstable_ModalBackdropScroll={true}
             role={ROLE.dialog}
         >
             <ModalHeader>

@@ -70,6 +70,8 @@ const Body = ({
                 className={css({
                     marginTop: "10px",
                     width: "100%",
+                    fontFamily: `system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif`,
+                    fontWeight: 400
                 })}
             >
                 <i
@@ -107,6 +109,7 @@ const ImportSharedCode = ({
             animate
             autoFocus
             isOpen={show}
+            unstable_ModalBackdropScroll={true}
             size={SIZE.default}
             role={ROLE.dialog}
         >
