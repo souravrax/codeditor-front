@@ -1,9 +1,7 @@
 import Axios from "axios";
+import { BASE_URL } from "../constants";
 
-const URL =
-    process.env.NODE_ENV == "development"
-        ? `http://localhost:5000/share/import`
-        : `https://codeditorapi.azurewebsites.net/share/import`;
+const URL = `${BASE_URL}/share/import`;
 
 const importHandler = (
     id,

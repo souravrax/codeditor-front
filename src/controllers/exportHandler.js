@@ -1,9 +1,7 @@
 import Axios from "axios";
+import { BASE_URL } from "../constants";
 
-const URL =
-    process.env.NODE_ENV == "development"
-        ? `http://localhost:5000/share/export`
-        : `https://codeditorapi.azurewebsites.net/share/export`;
+const URL = `${BASE_URL}/share/export`;
 
 const exportHandler = (code, language, input, expire, setIsLoading, setId) => {
     // console.log({

@@ -42,11 +42,9 @@ import {
 
 // Pure functions
 import downloadFileUtil from "../controllers/downloadAsFile";
+import { BASE_URL } from "../constants";
 
-const URL =
-    process.env.NODE_ENV == "development"
-        ? "http://localhost:5000/execute/"
-        : "https://codeditorapi.azurewebsites.net/execute";
+const URL = `${BASE_URL}/execute`
 
 const NavBar = ({
     code,
@@ -192,11 +190,10 @@ const NavBar = ({
                                 BaseButton: {
                                     style: ({ $theme, $isLoading }) => {
                                         return {
-                                            backgroundColor: `${
-                                                $isLoading
-                                                    ? $theme.colors.positive200
-                                                    : $theme.colors.positive300
-                                            }`,
+                                            backgroundColor: `${$isLoading
+                                                ? $theme.colors.positive200
+                                                : $theme.colors.positive300
+                                                }`,
                                             borderTopLeftRadius: `${$theme.borders.radius200} !important`,
                                             borderTopRightRadius: `${$theme.borders.radius200} !important`,
                                             borderBottomLeftRadius: `${$theme.borders.radius200} !important`,
