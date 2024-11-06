@@ -19,46 +19,38 @@ import { StatefulPopover, TRIGGER_TYPE } from "baseui/popover";
 import Settings from "./Settings";
 import Share from "./Share";
 import ImportSharedCode from "./ImportSharedCode";
-import Logo from "../assets/logo.png";
-import InfoModel from "../components/Info";
+import Logo from "../data/logo.png";
+import InfoModel from "./Info";
 
-// Redux
-import { connect } from "react-redux";
-import {
-    setCommandLineArguments,
-    setExecutionState,
-    setLanguage,
-    setOutput,
-} from "../app/master/master-actions";
-
-// Connect to server
 import axios from "axios";
 
-// Resource import
 import {
     languageOptions as options,
     languageSet,
-} from "../assets/languageOptions";
+} from "../data/languageOptions";
 
 // Pure functions
-import downloadFileUtil from "../controllers/downloadAsFile";
+import downloadFileUtil from "../utils/downloadAsFile";
+import { useAppContext } from "../context/AppContext";
 
 const URL =
     process.env.NODE_ENV == "development"
         ? "http://localhost:5000/execute/"
         : "https://codeditorapi.azurewebsites.net/execute";
 
-const NavBar = ({
-    code,
-    isExecuting,
-    setIsExecuting,
-    cla,
-    setCLA,
-    language,
-    setLanguage,
-    input,
-    setOutput,
-}) => {
+const NavBar = () => {
+    const {
+        code,
+        isExecuting,
+        setIsExecuting,
+        commandLineArguments: cla,
+        setCommandLineArguments: setCLA,
+        language,
+        setLanguage,
+        input,
+        setOutput,
+    } = useAppContext();
+
     const [showSettings, setShowSettings] = useState(false);
     const [showShareModel, setShowShareModel] = useState(false);
     const [showImportCodeModel, setShowImportCodeModel] = useState(false);
@@ -279,29 +271,14 @@ const NavBar = ({
                 showSettings={showSettings}
                 setShowSettings={setShowSettings}
             />
-            <Share show={showShareModel} setShow={setShowShareModel} />
-            <ImportSharedCode
+            {/* <Share show={showShareModel} setShow={setShowShareModel} /> */}
+            {/* <ImportSharedCode
                 show={showImportCodeModel}
                 setShow={setShowImportCodeModel}
-            />
+            /> */}
             <InfoModel isOpen={showInfoModel} setIsOpen={setShowInfoModel} />
         </div>
     );
 };
 
-const mapStateToProps = (state) => ({
-    isExecuting: state.master.isExecuting,
-    language: state.master.language,
-    cla: state.master.commandLineArguments,
-    input: state.master.input,
-    code: state.master.code,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    setIsExecuting: (value) => dispatch(setExecutionState(value)),
-    setLanguage: (language) => dispatch(setLanguage(language)),
-    setCLA: (cla) => dispatch(setCommandLineArguments(cla)),
-    setOutput: (output) => dispatch(setOutput(output)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default NavBar;

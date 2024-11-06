@@ -1,45 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import { Drawer } from "baseui/drawer";
 import { Button, SIZE as ButtonSize } from "baseui/button";
 
 import { Checkbox, STYLE_TYPE, LABEL_PLACEMENT } from "baseui/checkbox";
-
-// import Option from './Option';
-
-// Redux imports
-import { connect } from "react-redux";
-import {
-    setTheme,
-    setMinimap,
-    setQuickSuggestion,
-    setScrollbar,
-    setSelectOnLineNumber,
-    setShowFoldingControls,
-    setShowUnused,
-} from "../app/settings/settings-actions";
+import { useSettings } from "../context/SettingsContext";
 
 const Settings = ({
     showSettings,
     setShowSettings,
-
-    theme,
-    minimap,
-    showUnused,
-    selectOnLineNumbers,
-    scrollbar,
-    quickSuggestion,
-    showFoldingControls,
-
-    setTheme,
-    setMinimap,
-    setSelectOnLineNumber,
-    setShowUnused,
-    setScrollbar,
-    setShowFoldingControls,
-    setQuickSuggestion,
+}: {
+    showSettings: boolean;
+    setShowSettings: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-    // showSettings and setShowSettings are from the parent node
-    // others are from redux settings state
+    const {
+        theme,
+        minimap,
+        showUnused,
+        selectOnLineNumbers,
+        scrollbar,
+        quickSuggestion,
+        showFoldingControls,
+
+        setTheme,
+        setMinimap,
+        setSelectOnLineNumber,
+        setShowUnused,
+        setScrollbar,
+        setShowFoldingControls,
+        setQuickSuggestion,
+    } = useSettings();
 
     const settings = [
         [minimap, setMinimap, "Editor Minimap"],
@@ -109,7 +98,7 @@ const Settings = ({
                 </Checkbox>
             ))}
             <Button
-                onClick={()=> {
+                onClick={() => {
                     localStorage.clear();
                     location.reload();
                 }}
@@ -136,24 +125,4 @@ const Settings = ({
     );
 };
 
-const mapStateToProps = ({ settings }) => ({
-    theme: settings.theme,
-    minimap: settings.minimap,
-    showUnused: settings.showUnused,
-    showFoldingControls: settings.showFoldingControls,
-    selectOnLineNumbers: settings.selectOnLineNumbers,
-    scrollbar: settings.scrollbar,
-    quickSuggestion: settings.quickSuggestion,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    setTheme: (theme) => dispatch(setTheme(theme)),
-    setMinimap: (value) => dispatch(setMinimap(value)),
-    setShowUnused: (value) => dispatch(setShowUnused(value)),
-    setShowFoldingControls: (value) => dispatch(setShowFoldingControls(value)),
-    setSelectOnLineNumber: (value) => dispatch(setSelectOnLineNumber(value)),
-    setScrollbar: (value) => dispatch(setScrollbar(value)),
-    setQuickSuggestion: (value) => dispatch(setQuickSuggestion(value)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default Settings;

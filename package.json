@@ -1,54 +1,55 @@
 {
-  "name": "client",
-  "version": "1.0.1",
-  "private": true,
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.1.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "axios": "^0.21.0",
-    "baseui": "^9.104.0",
-    "monaco-editor-webpack-plugin": "^2.0.0",
-    "monaco-vim": "^0.1.8",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-github-corner": "^2.5.0",
-    "react-monaco-editor": "^0.40.0",
-    "react-redux": "^7.2.2",
-    "react-resize-detector": "^5.2.0",
-    "react-scripts": "4.0.0",
-    "react-select": "^3.1.0",
-    "react-spinners-kit": "^1.9.1",
-    "react-split-pane": "^0.1.92",
-    "redux-devtools-extension": "^2.13.8",
-    "redux-persist": "^6.0.0",
-    "styletron-engine-atomic": "^1.4.6",
-    "styletron-react": "^5.2.7"
-  },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "eslint-plugin-baseui": "^9.104.0",
-    "react-app-rewired": "^2.1.6"
-  }
+    "name": "client",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "lint": "eslint .",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@monaco-editor/react": "^4.6.0",
+        "@nextui-org/react": "^2.4.8",
+        "@vitejs/plugin-react-swc": "^3.7.1",
+        "axios": "^1.7.7",
+        "baseui": "14.0.0",
+        "framer-motion": "^11.11.11",
+        "monaco-editor": "^0.52.0",
+        "monaco-editor-webpack-plugin": "^7.1.0",
+        "monaco-vim": "^0.4.1",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-github-corner": "^2.5.0",
+        "react-monaco-editor": "^0.56.2",
+        "react-resize-detector": "^11.0.1",
+        "react-select": "^5.8.2",
+        "react-spinners-kit": "^1.9.1",
+        "react-split-pane": "^0.1.92",
+        "styletron-engine-atomic": "^1.6.2",
+        "styletron-engine-monolithic": "^1.0.0",
+        "styletron-react": "^6.1.1",
+        "vite": "^5.4.10",
+        "vite-plugin-svgr": "^4.3.0",
+        "vite-tsconfig-paths": "^5.1.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.14.0",
+        "@types/node": "^22.9.0",
+        "@types/react": "^18.3.12",
+        "@types/react-dom": "^18.3.1",
+        "@vitejs/plugin-react": "^4.3.3",
+        "autoprefixer": "^10.4.20",
+        "eslint": "^9.14.0",
+        "eslint-plugin-baseui": "^13.0.0",
+        "eslint-plugin-react": "^7.37.2",
+        "eslint-plugin-react-hooks": "^5.0.0",
+        "eslint-plugin-react-refresh": "^0.4.14",
+        "globals": "^15.12.0",
+        "postcss": "^8.4.47",
+        "tailwindcss": "^3.4.14",
+        "typescript": "^5.6.3",
+        "vite": "^5.4.10"
+    }
 }

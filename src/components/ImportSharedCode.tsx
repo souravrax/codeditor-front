@@ -12,28 +12,23 @@ import { Input } from "baseui/input";
 import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
 import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
 
-import importHandler from "../controllers/importHandler";
+import importHandler from "../utils/importHandler";
+import { useSettings } from "../context/SettingsContext";
+import { useAppContext } from "../context/AppContext";
 
-import { connect } from "react-redux";
-import {
-    setCode,
-    setLanguage,
-    setInput,
-    setOutput,
-} from "../app/master/master-actions";
-
-const Body = ({
-    id,
-    setCode,
-    setInput,
-    setLanguage,
-    setShow,
-    enqueue,
-    isLoading,
-    setIsLoading,
-    importHandler,
-    setId,
-}) => {
+const Body = ({ id, setShow, enqueue, isLoading, setIsLoading, importHandler }) => {
+    const {
+        id,
+        setCode,
+        setInput,
+        setLanguage,
+        setShow,
+        enqueue,
+        isLoading,
+        setIsLoading,
+        importHandler,
+        setId,
+    } = useAppContext();
     const [css] = useStyletron();
     return (
         <>
@@ -71,7 +66,7 @@ const Body = ({
                     marginTop: "10px",
                     width: "100%",
                     fontFamily: `system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif`,
-                    fontWeight: 400
+                    fontWeight: 400,
                 })}
             >
                 <i
@@ -144,11 +139,4 @@ const ImportSharedCode = ({
     );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    setCode: (code) => dispatch(setCode(code)),
-    setLanguage: (language) => dispatch(setLanguage(language)),
-    setInput: (input) => dispatch(setInput(input)),
-    setOutput: (output) => dispatch(setOutput(output)),
-});
-
-export default connect(null, mapDispatchToProps)(ImportSharedCode);
+export default ImportSharedCode;

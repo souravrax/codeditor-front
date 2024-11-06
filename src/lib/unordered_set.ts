@@ -1,17 +1,17 @@
 export default class unordered_set {
-    constructor(array) {
-        this.values = {}
+    constructor(array: any) {
+        this.values = {};
         for (let i of array) {
             this.values[i] = i;
         }
     }
-    insert(value) {
+    insert(value: string | number) {
         this.values[value] = value;
     }
-    find(value) {
+    find(value: string | number) {
         return this.values[value] !== undefined;
     }
-    erase(value) {
+    erase(value: string | number) {
         delete this.values[value];
     }
-};
+}

@@ -15,10 +15,8 @@ import Select from "react-select";
 import { Skeleton } from "baseui/skeleton";
 import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
 
-import { connect } from "react-redux";
-
-import exportHandler from "../controllers/exportHandler";
-import { languageSet } from "../assets/languageOptions";
+import exportHandler from "../utils/exportHandler";
+import { languageSet } from "../data/languageOptions";
 
 const snackBarNegative = {
     Root: {

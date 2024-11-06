@@ -1,4 +1,4 @@
-import unordered_set from './data_structures/unordered_set'
+import unordered_set from '../lib/unordered_set'
 export const languageOptions = [
     { label: "Bash", id: "bash" },
     { label: "C", id: "c" },

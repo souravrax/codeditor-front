@@ -1,4 +1,4 @@
-import mapLanguageToExtension from '../assets/mapLanguageToExtension.json';
+import mapLanguageToExtension from '../data/mapLanguageToExtension.json';
 import { DURATION } from 'baseui/snackbar';
 export default (code, language, enqueue) => {
     const filename = "source_code." + mapLanguageToExtension[language];
