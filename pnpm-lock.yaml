@@ -16,7 +16,7 @@ importers:
         version: 4.2.4
       '@testing-library/react':
         specifier: ^9.3.2
-        version: 9.5.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 9.5.0(@types/react@19.1.8)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@testing-library/user-event':
         specifier: ^7.1.2
         version: 7.2.1(@testing-library/dom@6.16.0)
@@ -28,7 +28,7 @@ importers:
         version: 0.21.4
       baseui:
         specifier: ^9.104.0
-        version: 9.116.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(styletron-react@5.2.7(react@17.0.2))
+        version: 9.116.3(@types/react@19.1.8)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(styletron-react@5.2.7(react@17.0.2))
       monaco-editor:
         specifier: ^0.49.0
         version: 0.49.0
@@ -48,8 +48,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0(react@17.0.2)
       react-monaco-editor:
-        specifier: ^0.40.0
-        version: 0.40.0(react@17.0.2)
+        specifier: ^0.58.0
+        version: 0.58.0(monaco-editor@0.49.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-redux:
         specifier: ^7.2.2
         version: 7.2.9(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -1565,11 +1565,12 @@ packages:
   react-lifecycles-compat@3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
 
-  react-monaco-editor@0.40.0:
-    resolution: {integrity: sha512-IG322vOwKc/yjhn91xbqHONyAVxjv5L0YOUBU+hDwfswlglm/sGsqGhK9n1lD5d3l3kegMO/ZeZaMHC2LGgNRw==}
+  react-monaco-editor@0.58.0:
+    resolution: {integrity: sha512-e8JH0TQEzO96Wd/EXgzc9M9tQK1pxBECD+8GNob9slMURcCM36TiVrgc4topWCDGYxRuMj8IEkaX+s3eQcUUqw==}
     peerDependencies:
-      '@types/react': ^16.x
-      react: ^16.x
+      monaco-editor: ^0.52.0
+      react: '>=16.8.0 <20.0.0'
+      react-dom: '>=16.8.0 <20.0.0'
 
   react-movable@2.5.4:
     resolution: {integrity: sha512-F+Ml4Il9S7uyY2Nr/UzwnXxWewwsHdQkmwgzAjk+Dsz73sy2yCJk7GkQkdqmh8W6XXTlviepz1VA0eHUWh9MZQ==}
@@ -2565,11 +2566,11 @@ snapshots:
       pretty-format: 24.9.0
       redent: 3.0.0
 
-  '@testing-library/react@9.5.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@testing-library/react@9.5.0(@types/react@19.1.8)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.27.6
       '@testing-library/dom': 6.16.0
-      '@types/testing-library__react': 9.1.3
+      '@types/testing-library__react': 9.1.3(@types/react@19.1.8)
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
     transitivePeerDependencies:
@@ -2606,7 +2607,9 @@ snapshots:
 
   '@types/parse-json@4.0.2': {}
 
-  '@types/react-dom@19.1.6': {}
+  '@types/react-dom@19.1.6(@types/react@19.1.8)':
+    dependencies:
+      '@types/react': 19.1.8
 
   '@types/react-redux@7.1.34':
     dependencies:
@@ -2629,9 +2632,9 @@ snapshots:
     dependencies:
       '@testing-library/dom': 6.16.0
 
-  '@types/testing-library__react@9.1.3':
+  '@types/testing-library__react@9.1.3(@types/react@19.1.8)':
     dependencies:
-      '@types/react-dom': 19.1.6
+      '@types/react-dom': 19.1.6(@types/react@19.1.8)
       '@types/testing-library__dom': 7.5.0
       pretty-format: 25.5.0
     transitivePeerDependencies:
@@ -2737,7 +2740,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  baseui@9.116.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(styletron-react@5.2.7(react@17.0.2)):
+  baseui@9.116.3(@types/react@19.1.8)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(styletron-react@5.2.7(react@17.0.2)):
     dependencies:
       '@date-io/date-fns': 2.17.0(date-fns@2.30.0)
       card-validator: 6.2.0
@@ -2750,13 +2753,13 @@ snapshots:
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       react-dropzone: 9.0.0(react@17.0.2)
-      react-focus-lock: 2.13.6(react@17.0.2)
+      react-focus-lock: 2.13.6(@types/react@19.1.8)(react@17.0.2)
       react-input-mask: 2.0.4(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-is: 16.13.1
       react-movable: 2.5.4(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-multi-ref: 1.0.2
       react-range: 1.10.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      react-uid: 2.4.0(react@17.0.2)
+      react-uid: 2.4.0(@types/react@19.1.8)(react@17.0.2)
       react-virtualized: 9.22.6(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-virtualized-auto-sizer: 1.0.26(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-window: 1.8.11(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -3445,15 +3448,17 @@ snapshots:
       prop-types-extra: 1.1.1(react@17.0.2)
       react: 17.0.2
 
-  react-focus-lock@2.13.6(react@17.0.2):
+  react-focus-lock@2.13.6(@types/react@19.1.8)(react@17.0.2):
     dependencies:
       '@babel/runtime': 7.27.6
       focus-lock: 1.3.6
       prop-types: 15.8.1
       react: 17.0.2
       react-clientside-effect: 1.2.8(react@17.0.2)
-      use-callback-ref: 1.3.3(react@17.0.2)
-      use-sidecar: 1.1.3(react@17.0.2)
+      use-callback-ref: 1.3.3(@types/react@19.1.8)(react@17.0.2)
+      use-sidecar: 1.1.3(@types/react@19.1.8)(react@17.0.2)
+    optionalDependencies:
+      '@types/react': 19.1.8
 
   react-github-corner@2.5.0(react@17.0.2):
     dependencies:
@@ -3477,11 +3482,11 @@ snapshots:
 
   react-lifecycles-compat@3.0.4: {}
 
-  react-monaco-editor@0.40.0(react@17.0.2):
+  react-monaco-editor@0.58.0(monaco-editor@0.49.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
       monaco-editor: 0.49.0
-      prop-types: 15.8.1
       react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
 
   react-movable@2.5.4(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
@@ -3562,10 +3567,12 @@ snapshots:
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
 
-  react-uid@2.4.0(react@17.0.2):
+  react-uid@2.4.0(@types/react@19.1.8)(react@17.0.2):
     dependencies:
       react: 17.0.2
       tslib: 2.8.1
+    optionalDependencies:
+      '@types/react': 19.1.8
 
   react-virtualized-auto-sizer@1.0.26(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
@@ -3879,16 +3886,20 @@ snapshots:
 
   urix@0.1.0: {}
 
-  use-callback-ref@1.3.3(react@17.0.2):
+  use-callback-ref@1.3.3(@types/react@19.1.8)(react@17.0.2):
     dependencies:
       react: 17.0.2
       tslib: 2.8.1
+    optionalDependencies:
+      '@types/react': 19.1.8
 
-  use-sidecar@1.1.3(react@17.0.2):
+  use-sidecar@1.1.3(@types/react@19.1.8)(react@17.0.2):
     dependencies:
       detect-node-es: 1.1.0
       react: 17.0.2
       tslib: 2.8.1
+    optionalDependencies:
+      '@types/react': 19.1.8
 
   v8-compile-cache@2.4.0: {}
 

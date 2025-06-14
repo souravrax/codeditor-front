@@ -9,4 +9,9 @@ export default defineConfig({
   esbuild: {
     jsx: "preserve",
   },
+  build: {
+    rollupOptions: {
+      external: ["react-monaco-editor", "react-resize-detector"],
+    },
+  },
 });

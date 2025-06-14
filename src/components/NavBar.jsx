@@ -1,5 +1,5 @@
-"use strict";
-import React, { useState } from "react";
+"use strict";;
+import { useState } from "react";
 
 // Baseui
 import {
@@ -8,19 +8,18 @@ import {
     StyledNavigationList,
     StyledNavigationItem,
 } from "baseui/header-navigation";
-import { Button, SIZE, SHAPE, KIND as ButtonKind, KIND } from "baseui/button";
-import { Input } from "baseui/input";
+import { Button, SIZE, SHAPE } from "baseui/button";
 import { Combobox } from "baseui/combobox";
 import { Heading, HeadingLevel } from "baseui/heading";
 import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
 import { StatefulPopover, TRIGGER_TYPE } from "baseui/popover";
 
 // Custom Components
-import Settings from "./Settings";
 import Share from "./Share";
 import ImportSharedCode from "./ImportSharedCode";
-import Logo from "../assets/logo.png";
 import InfoModel from "./Info";
+import Logo from "../assets/logo.png";
+import Settings from "./Settings";
 
 // Redux
 import { connect } from "react-redux";

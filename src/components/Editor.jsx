@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import MonacoEditor from "react-monaco-editor";
+
+const MonacoEditor = React.lazy(() => import("react-monaco-editor"))
+
 import ReactResizeDetector from 'react-resize-detector'
 import { MetroSpinner as Loader } from 'react-spinners-kit'
 
