@@ -13,5 +13,6 @@ export default defineConfig({
     rollupOptions: {
       external: ["react-monaco-editor", "react-resize-detector"],
     },
+    minify: true,
   },
 });

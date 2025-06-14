@@ -20,6 +20,7 @@ class Editor extends Component {
             width: 0,
             isReady: false
         };
+        this.editorContainerRef = React.createRef();
     }
 
 
@@ -70,13 +71,14 @@ class Editor extends Component {
             <div style={{
                 height: "100%",
                 width: "100%"
-            }}>
+            }} ref={this.editorContainerRef}>
                 <ReactResizeDetector
                     handleWidth
                     handleHeight
                     onResize={this.handleResize}
                     refreshMode="debounce"
-                    refreshRate={50} />
+                    refreshRate={50}
+                    targetRef={this.editorContainerRef} />
                 {
                     isReady ? <MonacoEditor
                         height={height}
