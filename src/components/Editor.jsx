@@ -1,8 +1,5 @@
-import React, { Component } from "react";
-
-const MonacoEditor = React.lazy(() => import("react-monaco-editor"))
-
-import ReactResizeDetector from 'react-resize-detector'
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
+import MonacoEditor from '@monaco-editor/react'
 
 import PropTypes from 'prop-types'
 
@@ -12,102 +9,106 @@ import { setCode } from '../app/master/master-actions'
 
 import languageToSyntax from '../assets/mapLanguageToSyntax.json';
 
-class Editor extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            height: 0,
-            width: 0,
-            isReady: false
-        };
-        this.editorContainerRef = React.createRef();
-    }
+const Editor = (props) => {
+    const {
+        language,
+        code,
+        setCode,
+        theme,
+        minimapStatus,
+        showUnused,
+        selectOnLineNumbers,
+        scrollbar,
+        quickSuggestion,
+        showFoldingControls,
+    } = props;
 
 
-    editorDidMount = (editor, monaco) => {
+    const [height, setHeight] = useState(0);
+    const [width, setWidth] = useState(0);
+    const [isReady, setIsReady] = useState(false);
+    const editorContainerRef = useRef(null);
+    const resizeObserver = useRef(null);
+    const [editorOptions, setEditorOptions] = useState({});
+
+    const editorDidMount = (editor, monaco) => {
         editor.onKeyDown(event => {
             const { browserEvent, ctrlKey } = event;
             const { key } = browserEvent;
             if (key === 's' && ctrlKey) {
                 event.preventDefault();
-            } else if(key == 'Enter' && ctrlKey) {
+            } else if(key === 'Enter' && ctrlKey) {
                 event.preventDefault();
                 alert("Execute");
             }
         });
     };
 
-    componentDidMount() {
-        this.setState({
-            ...this.state,
-            isReady: true
-        })
-    }
+    useEffect(() => {
+        resizeObserver.current = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const { width, height } = entry.contentRect;
+                handleResize(width, height);
+            }
+        });
 
-    handleResize = (width, height) => {
-        this.setState({
-            ...this.state,
-            height: height,
-            width: width
-        })
-    }
+        if (editorContainerRef.current) {
+            resizeObserver.current.observe(editorContainerRef.current);
+        }
 
-    render() {
-        const { width, height, isReady } = this.state;
-        const {
-            language,
-            code,
-            setCode,
-            theme,
-            minimapStatus,
-            showUnused,
-            selectOnLineNumbers,
-            scrollbar,
-            quickSuggestion,
-            showFoldingControls,
-        } = this.props;
+        setIsReady(true);
 
-        return (
-            <div style={{
-                height: "100%",
-                width: "100%"
-            }} ref={this.editorContainerRef}>
-                <ReactResizeDetector
-                    handleWidth
-                    handleHeight
-                    onResize={this.handleResize}
-                    refreshMode="debounce"
-                    refreshRate={50}
-                    targetRef={this.editorContainerRef} />
-                {
-                    isReady ? <MonacoEditor
-                        height={height}
-                        width={width}
-                        language={languageToSyntax[language]}
-                        theme={`vs-${theme}`}
-                        value={code}
-                        options={{
-                            minimap: {
-                                enabled: minimapStatus
-                            },
-                            showFoldingControls: showFoldingControls,
-                            selectOnLineNumbers: selectOnLineNumbers,
-                            scrollbar: scrollbar,
-                            quickSuggestions: quickSuggestion,
-                            showUnused: showUnused
-                        }}
-                        onChange={(newCode, event) => {
-                            setCode(newCode);
-                        }}
-                        editorDidMount={this.editorDidMount}
-                        editorWillMount={this.editorWillMount}
-                    /> : null
-                }
-            </div>
-        );
-    }
+        return () => {
+            if (resizeObserver.current) {
+                resizeObserver.current.disconnect();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        setEditorOptions({
+            minimap: {
+                enabled: minimapStatus
+            },
+            showFoldingControls: showFoldingControls,
+            selectOnLineNumbers: selectOnLineNumbers,
+            scrollbar: scrollbar,
+            quickSuggestions: quickSuggestion,
+            showUnused: showUnused
+        });
+    }, [minimapStatus, showFoldingControls, selectOnLineNumbers, scrollbar, quickSuggestion, showUnused]);
+
+    const handleResize = (newWidth, newHeight) => {
+        setWidth(newWidth);
+        setHeight(newHeight);
+    };
+
+    return (
+        <div style={{
+            height: "100%",
+            width: "100%"
+        }} ref={editorContainerRef}>
+            {
+                isReady ? (
+                    <Suspense fallback={<div>Loading Editor...</div>}>
+                        <MonacoEditor
+                            height={height}
+                            width={width}
+                            language={languageToSyntax[language]}
+                            theme={`vs-${theme}`}
+                            value={code}
+                            options={editorOptions}
+                            onChange={(newCode, event) => {
+                                setCode(newCode);
+                            }}
+                            editorDidMount={editorDidMount}
+                        />
+                    </Suspense>
+                ) : null
+            }
+        </div>
+    );
 }
-
 
 Editor.propTypes = {
     editorOptions: PropTypes.object,

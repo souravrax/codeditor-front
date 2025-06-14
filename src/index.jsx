@@ -18,8 +18,6 @@ import { PersistGate } from "redux-persist/integration/react";
 // Components/Containers Imports
 import App from "./App.jsx";
 
-console.log("Hello World");
-
 // ReactDOM Render
 ReactDOM.render(
   <Provider store={store}>

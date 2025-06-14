@@ -10,9 +10,6 @@ export default defineConfig({
     jsx: "preserve",
   },
   build: {
-    rollupOptions: {
-      external: ["react-monaco-editor", "react-resize-detector"],
-    },
-    minify: true,
+    sourcemap: true,
   },
 });
