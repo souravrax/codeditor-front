@@ -3,7 +3,6 @@ import React, { Component } from "react";
 const MonacoEditor = React.lazy(() => import("react-monaco-editor"))
 
 import ReactResizeDetector from 'react-resize-detector'
-import { MetroSpinner as Loader } from 'react-spinners-kit'
 
 import PropTypes from 'prop-types'
 
@@ -100,17 +99,7 @@ class Editor extends Component {
                         }}
                         editorDidMount={this.editorDidMount}
                         editorWillMount={this.editorWillMount}
-                    /> :
-                        <div style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "100%",
-                            height: "100%",
-                            backgroundColor: "black"
-                        }}>
-                            <Loader loading={!isReady} />
-                        </div>
+                    /> : null
                 }
             </div>
         );
