@@ -18,7 +18,7 @@
     "react-github-corner": "^2.5.0",
     "react-monaco-editor": "^0.58.0",
     "react-redux": "^7.2.2",
-    "react-resize-detector": "^5.2.0",
+    "react-resize-detector": "^8.0.4",
     "react-select": "^3.1.0",
     "react-split-pane": "^0.1.92",
     "redux": "^5.0.1",
