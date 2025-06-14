@@ -16,18 +16,20 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 // Components/Containers Imports
-import App from "./App";
+import App from "./App.jsx";
+
+console.log("Hello World");
 
 // ReactDOM Render
 ReactDOM.render(
-    <Provider store={store}>
-        <StyletronProvider value={engine}>
-            <PersistGate loading={null} persistor={persistor}>
-                <App />
-            </PersistGate>
-        </StyletronProvider>
-    </Provider>,
-    document.getElementById("root")
+  <Provider store={store}>
+    <StyletronProvider value={engine}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
+    </StyletronProvider>
+  </Provider>,
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
@@ -37,7 +39,7 @@ serviceWorker.unregister();
 
 // Codeditor logo on console
 console.log(
-    `
+  `
 Thank you for using
 ██████╗ ██████╗ ██████╗ ███████╗██████╗ ██╗████████╗ ██████╗ ██████╗ 
 ██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔══██╗██║╚══██╔══╝██╔═══██╗██╔══██╗

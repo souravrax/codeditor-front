@@ -7,7 +7,7 @@ import { SnackbarProvider } from 'baseui/snackbar'
 
 
 // Component/Container Imports
-import MainPage from './pages/MainPage'
+import MainPage from './pages/MainPage.jsx'
 
 // Redux
 import { connect } from 'react-redux';

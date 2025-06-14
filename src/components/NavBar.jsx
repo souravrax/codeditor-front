@@ -20,7 +20,7 @@ import Settings from "./Settings";
 import Share from "./Share";
 import ImportSharedCode from "./ImportSharedCode";
 import Logo from "../assets/logo.png";
-import InfoModel from "../components/Info";
+import InfoModel from "./Info";
 
 // Redux
 import { connect } from "react-redux";
