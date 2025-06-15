@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
+import { HashRouter, Routes, Route } from "react-router";
 
 // BaseWeb imports
 import { Client as Styletron } from "styletron-engine-atomic";
@@ -20,13 +21,18 @@ import App from "./App.jsx";
 
 // ReactDOM Render
 ReactDOM.render(
-  <Provider store={store}>
-    <StyletronProvider value={engine}>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </StyletronProvider>
-  </Provider>,
+  <HashRouter>
+    <Provider store={store}>
+      <StyletronProvider value={engine}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Routes>
+            <Route index element={<App />} />
+            <Route path=":sharedId" element={<App />} />
+          </Routes>
+        </PersistGate>
+      </StyletronProvider>
+    </Provider>
+  </HashRouter>,
   document.getElementById("root")
 );
 

@@ -14,16 +14,9 @@ import { Heading, HeadingLevel } from "baseui/heading";
 import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
 import { StatefulPopover, TRIGGER_TYPE } from "baseui/popover";
 
-// Custom Components
-// import Share from "./Share";
-// import ImportSharedCode from "./ImportSharedCode";
-// import InfoModel from "./Info";
-// import Settings from "./Settings";
-
 import Logo from "../assets/logo.png";
 const Settings = lazy(() => import("./Settings"));
 const Share = lazy(() => import("./Share"));
-const ImportSharedCode = lazy(() => import("./ImportSharedCode"));
 const InfoModel = lazy(() => import("./Info"));
 
 // Redux
@@ -230,16 +223,6 @@ const NavBar = ({
                     </StyledNavigationItem> */}
           <StyledNavigationItem>
             <Button
-              size={SIZE.compact}
-              startEnhancer={() => <i className="fas fa-network-wired"></i>}
-              onClick={() => setShowImportCodeModel(true)}
-              shape={SHAPE.pill}
-            >
-              Import shared code
-            </Button>
-          </StyledNavigationItem>
-          <StyledNavigationItem>
-            <Button
               startEnhancer={() => <i className="fas fa-share-alt"></i>}
               size={SIZE.compact}
               onClick={() => setShowShareModel(true)}
@@ -276,12 +259,6 @@ const NavBar = ({
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
         <Share show={showShareModel} setShow={setShowShareModel} />
-      </Suspense>
-      <Suspense fallback={<div>Loading...</div>}>
-        <ImportSharedCode
-          show={showImportCodeModel}
-          setShow={setShowImportCodeModel}
-        />
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
         <InfoModel isOpen={showInfoModel} setIsOpen={setShowInfoModel} />

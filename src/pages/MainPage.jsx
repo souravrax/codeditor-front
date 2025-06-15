@@ -1,14 +1,53 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import NavBar from "../components/NavBar";
+import { useParams } from "react-router";
 const Editor = lazy(() => import("../components/Editor"));
 
 import { Textarea } from "baseui/textarea";
 
 import { connect } from "react-redux";
 
-import { setInput } from "../app/master/master-actions";
+import {
+  setInput,
+  setCode,
+  setLanguage,
+  setOutput,
+} from "../app/master/master-actions";
+import importHandler from "../controllers/importHandler";
 
-const MainPage = ({ input, setInput, output }) => {
+const MainPage = ({
+  input,
+  setInput,
+  output,
+  setCode,
+  setLanguage,
+  setOutput,
+}) => {
+  const { sharedId } = useParams();
+
+  useEffect(() => {
+    (async function () {
+      if (sharedId) {
+        try {
+          const response = await importHandler(
+            sharedId,
+            setCode,
+            setLanguage,
+            setInput,
+            setOutput
+          );
+          if (response) {
+            setCode(response.code);
+            setLanguage(response.language);
+            setInput(response.input);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    })();
+  }, [sharedId]);
+
   return (
     <>
       <NavBar toggleTheme={(val) => console.log(val)} />
@@ -67,6 +106,9 @@ const MainPage = ({ input, setInput, output }) => {
 
 const mapDispatchToProps = (dispatch) => ({
   setInput: (input) => dispatch(setInput(input)),
+  setCode: (code) => dispatch(setCode(code)),
+  setLanguage: (language) => dispatch(setLanguage(language)),
+  setOutput: (output) => dispatch(setOutput(output)),
 });
 
 const mapStateToProps = (state) => ({
