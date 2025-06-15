@@ -3,12 +3,10 @@ import NavBar from "../components/NavBar";
 import { useParams } from "react-router";
 const Editor = lazy(() => import("../components/Editor"));
 
-import { Textarea } from "baseui/textarea";
-
-import importHandler from "../controllers/importHandler";
+import importHandler from "@/lib/importHandler";
 import { useCodeEditor } from "@/app/store";
 
-const MainPage = () => {
+const App = () => {
   const setInput = useCodeEditor((s) => s.setInput);
   const setCode = useCodeEditor((s) => s.setCode);
   const setLanguage = useCodeEditor((s) => s.setLanguage);
@@ -42,7 +40,7 @@ const MainPage = () => {
 
   return (
     <>
-      <NavBar toggleTheme={(val) => console.log(val)} />
+      <NavBar />
       <div
         className="editor"
         style={{
@@ -61,39 +59,20 @@ const MainPage = () => {
           height: "calc(40vh - 61px)",
         }}
       >
-        <Textarea
+        <textarea
           placeholder="Input"
           value={input}
-          clearable
-          onChange={(e) => setInput(e.target.value)}
-          overrides={{
-            InputContainer: {
-              style: ({ $theme }) => {
-                return {
-                  borderRight: `1px solid ${$theme.colors.primary100}`,
-                  borderTop: `1px solid ${$theme.colors.primary100}`,
-                };
-              },
-            },
-          }}
-        />
-        <Textarea
+          onChange={(e) => setInput((e.target as HTMLTextAreaElement).value)}
+          className="flex-1 w-full border-r border-t border-solid border-primary100 p-2 outline-none resize-none"
+        ></textarea>
+        <textarea
           value={output}
           placeholder="Output"
-          overrides={{
-            InputContainer: {
-              style: ({ $theme }) => {
-                return {
-                  borderTop: `1px solid ${$theme.colors.primary100}`,
-                  backgroundColor: `${$theme.colors.backgroundStateDisabled}`,
-                };
-              },
-            },
-          }}
-        />
+          className="flex-1 w-full border-t border-solid border-primary100 bg-backgroundStateDisabled p-2 outline-none resize-none"
+        ></textarea>
       </div>
     </>
   );
 };
 
-export default MainPage;
+export default App;

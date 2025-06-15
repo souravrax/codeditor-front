@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import { Drawer } from "baseui/drawer";
-import { Button, SIZE as ButtonSize } from "baseui/button";
-
-import { Checkbox, STYLE_TYPE, LABEL_PLACEMENT } from "baseui/checkbox";
+import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 import { useAppSettings } from "@/app/store";
 
@@ -36,7 +41,9 @@ const Settings: React.FC<{
     (state) => state.setQuickSuggestion
   );
 
-  const settings = [
+  type SettingItem = [boolean, (value: boolean) => void, string];
+
+  const settings: SettingItem[] = [
     [minimap, setMinimap, "Editor Minimap"],
     [selectOnLineNumbers, setSelectOnLineNumber, "Select On Line Number"],
     [scrollbar, setScrollbar, "Editor Scrollbar"],
@@ -46,88 +53,52 @@ const Settings: React.FC<{
   ];
 
   return (
-    <Drawer
-      isOpen={showSettings}
-      autoFocus
-      onClose={() => setShowSettings(false)}
-    >
-      <h1
-        style={{
-          marginBottom: "35px",
-        }}
-      >
-        Settings
-      </h1>
-      <Checkbox
-        checked={theme === "dark"}
-        checkmarkType={STYLE_TYPE.toggle_round}
-        onChange={(e) => {
-          setTheme(e.target.checked ? "dark" : "light");
-        }}
-        labelPlacement={LABEL_PLACEMENT.right}
-        overrides={{
-          Root: {
-            style: ({ $theme }: { $theme: any }) => ({
-              marginTop: "10px",
-              marginBottom: "10px",
-              backgroundColor: `${$theme.colors.backgroundSecondary}`,
-              paddingTop: "10px",
-              paddingBottom: "10px",
-              borderRadius: `${$theme.borders.radius400}`,
-            }),
-          },
-        }}
-      >
-        Dark Mode
-      </Checkbox>
-      {settings.map(([state, action, name], indx) => (
-        <Checkbox
-          checked={state as boolean}
-          key={indx}
-          checkmarkType={STYLE_TYPE.toggle_round}
-          onChange={(e) => action(e.target.checked as boolean)}
-          labelPlacement={LABEL_PLACEMENT.right}
-          overrides={{
-            Root: {
-              style: ({ $theme }: { $theme: any }) => ({
-                marginTop: "10px",
-                marginBottom: "10px",
-                backgroundColor: `${$theme.colors.backgroundSecondary}`,
-                paddingTop: "10px",
-                paddingBottom: "10px",
-                borderRadius: `${$theme.borders.radius400}`,
-              }),
-            },
-          }}
-        >
-          {name}
-        </Checkbox>
-      ))}
-      <Button
-        onClick={() => {
-          localStorage.clear();
-          location.reload();
-        }}
-        startEnhancer={() => <i className="fas fa-redo-alt"></i>}
-        size={ButtonSize.compact}
-        overrides={{
-          BaseButton: {
-            style: ({ $theme }: { $theme: any }) => ({
-              marginBottom: "10px",
-              background: `linear-gradient(to right, rgb(255, 65, 108), rgb(255, 75, 43))`,
-              paddingTop: "10px",
-              paddingBottom: "10px",
-              borderTopLeftRadius: `${$theme.borders.radius300} !important`,
-              borderTopRightRadius: `${$theme.borders.radius300} !important`,
-              borderBottomLeftRadius: `${$theme.borders.radius300} !important`,
-              borderBottomRightRadius: `${$theme.borders.radius300} !important`,
-            }),
-          },
-        }}
-      >
-        Reset and Reload
-      </Button>
-    </Drawer>
+    <Dialog open={showSettings} onOpenChange={setShowSettings}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Settings</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="flex items-center justify-between rounded-md bg-secondary p-3">
+            <Label htmlFor="dark-mode" className="text-right">
+              Dark Mode
+            </Label>
+            <Checkbox
+              id="dark-mode"
+              checked={theme === "dark"}
+              onCheckedChange={(checked) => {
+                setTheme(checked ? "dark" : "light");
+              }}
+            />
+          </div>
+          {settings.map(([state, action, name], indx) => (
+            <div
+              key={indx}
+              className="flex items-center justify-between rounded-md bg-secondary p-3"
+            >
+              <Label htmlFor={`setting-${indx}`} className="text-right">
+                {name}
+              </Label>
+              <Checkbox
+                id={`setting-${indx}`}
+                checked={state as boolean}
+                onCheckedChange={(checked) => action(checked as boolean)}
+              />
+            </div>
+          ))}
+          <Button
+            onClick={() => {
+              localStorage.clear();
+              location.reload();
+            }}
+            className="mb-3 w-full rounded-md bg-gradient-to-r from-rose-500 to-red-500 p-3"
+          >
+            <i className="fas fa-redo-alt mr-2"></i>
+            Reset and Reload
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

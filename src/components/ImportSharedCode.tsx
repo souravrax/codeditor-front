@@ -1,25 +1,27 @@
 import React, { useState } from "react";
 import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-  ROLE,
-} from "baseui/modal";
-import { useStyletron } from "baseui";
-import { Input } from "baseui/input";
-import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
-import { useSnackbar } from "baseui/snackbar";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-import importHandler from "../controllers/importHandler";
+import importHandler from "@/lib/importHandler";
 
 import { useCodeEditor } from "@/app/store";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface BodyProps {
   id: string;
   setShow: (show: boolean) => void;
-  enqueue: any; // TODO: Define a more specific type for enqueue
+  toast: any;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   importHandler: (
@@ -29,15 +31,15 @@ interface BodyProps {
     setInput: (input: string) => void,
     setLanguage: (language: string) => void,
     setShow: (show: boolean) => void,
-    enqueue: any
-  ) => void; // TODO: Define a more specific type for importHandler
+    toast: any
+  ) => void;
   setId: (id: string) => void;
 }
 
 const Body: React.FC<BodyProps> = ({
   id,
   setShow,
-  enqueue,
+  toast,
   isLoading,
   setIsLoading,
   importHandler,
@@ -48,10 +50,9 @@ const Body: React.FC<BodyProps> = ({
   const setLanguage = useCodeEditor((s) => s.setLanguage);
   const setOutput = useCodeEditor((s) => s.setOutput);
 
-  const [css] = useStyletron();
   return (
     <>
-      <div className={css({ display: "flex" })}>
+      <div className={cn("flex gap-2")}>
         <Input
           placeholder="ID of the shared code"
           value={id}
@@ -59,11 +60,9 @@ const Body: React.FC<BodyProps> = ({
           autoFocus
         />
         <Button
-          startEnhancer={(() => <i className="fas fa-file-import"></i>) as any} // TODO: Fix type
-          kind={ButtonKind.primary}
-          isLoading={isLoading}
+          variant="default"
+          disabled={isLoading}
           onClick={() => {
-            // console.log("called");
             setIsLoading(true);
             importHandler(
               id,
@@ -72,27 +71,21 @@ const Body: React.FC<BodyProps> = ({
               setInput,
               setLanguage,
               setShow,
-              enqueue
+              toast
             );
             setOutput("");
           }}
         >
-          Import
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <i className="fas fa-file-import mr-2"></i>Import
         </Button>
       </div>
-      <p
-        className={css({
-          marginTop: "10px",
-          width: "100%",
-          fontFamily: `system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif`,
-          fontWeight: 400,
-        })}
-      >
+      <p className={cn("mt-10 w-full font-normal")}>
         <i
           className={
             `fas fa-info-circle ` +
-            css({
-              marginRight: "5px",
+            cn({
+              "mr-2": true,
             })
           }
         ></i>
@@ -113,27 +106,23 @@ const ImportSharedCode: React.FC<ImportSharedCodeProps> = ({
 }) => {
   const [id, setId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { enqueue } = useSnackbar();
 
   return (
-    <Modal
-      onClose={() => {
+    <Dialog
+      onOpenChange={() => {
         setShow(false);
       }}
-      closeable
-      animate
-      autoFocus
-      isOpen={show}
-      unstable_ModalBackdropScroll={true}
-      size={SIZE.default}
-      role={ROLE.dialog}
+      open={show}
     >
-      <ModalHeader>
-        <h3>Import Shared Code</h3>
-      </ModalHeader>
-      <ModalBody>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Import Shared Code</DialogTitle>
+          <DialogDescription>
+            Enter the share ID to fetch the code.
+          </DialogDescription>
+        </DialogHeader>
         <Body
-          enqueue={enqueue}
+          toast={toast}
           id={id}
           importHandler={importHandler}
           isLoading={isLoading}
@@ -141,18 +130,15 @@ const ImportSharedCode: React.FC<ImportSharedCodeProps> = ({
           setIsLoading={setIsLoading}
           setShow={setShow}
         />
-      </ModalBody>
-      <ModalFooter>
-        <ModalButton
-          onClick={() => {
-            setShow(false);
-          }}
-          kind={ButtonKind.tertiary}
-        >
-          Close
-        </ModalButton>
-      </ModalFooter>
-    </Modal>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline" onClick={() => setShow(false)}>
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

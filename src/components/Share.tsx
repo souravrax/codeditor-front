@@ -1,42 +1,28 @@
 import React, { useState } from "react";
 import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-  ROLE,
-} from "baseui/modal";
-import { useStyletron } from "baseui";
-import { Input } from "baseui/input";
-import { Button, SIZE, SHAPE, KIND as ButtonKind } from "baseui/button";
-import { FormControl } from "baseui/form-control";
-import Select from "react-select";
-import { Skeleton } from "baseui/skeleton";
-import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast, Toaster } from "sonner";
 
-import exportHandler from "../controllers/exportHandler";
-import { languageSet } from "../assets/languageOptions";
+import exportHandler from "@/lib/exportHandler";
+import { languageSet } from "@/assets/languageOptions";
 import { useCodeEditor } from "@/app/store";
-
-const snackBarNegative = {
-  Root: {
-    style: ({ $theme }: { $theme: any }) => ({
-      backgroundColor: `${$theme.colors.negative400}`,
-    }),
-  },
-  Message: {
-    style: () => ({
-      color: "#fff",
-      fontWeight: "600",
-    }),
-  },
-  StartEnhancerContainer: {
-    style: () => ({
-      color: "#fff",
-    }),
-  },
-};
 
 const Share: React.FC<{ show: boolean; setShow: (show: boolean) => void }> = ({
   show,
@@ -46,46 +32,37 @@ const Share: React.FC<{ show: boolean; setShow: (show: boolean) => void }> = ({
   const language = useCodeEditor((state) => state.language);
   const input = useCodeEditor((state) => state.input);
 
-  const [css, theme] = useStyletron();
   const linkRef = React.useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [id, setId] = useState("");
   const [copied, setCopied] = useState(false);
-  const { enqueue } = useSnackbar();
 
-  const [expire, setExpire] = useState({ label: "5 minutes", value: "1" });
+  const [expire, setExpire] = useState("1"); // Changed to string for shadcn/ui select
 
   const shareHandler = () => {
     if (code.length === 0) {
-      enqueue(
-        {
-          startEnhancer: (() => (
-            <i className="fas fa-exclamation-triangle"></i>
-          )) as any,
-          overrides: snackBarNegative,
-          message: "Code should not be blank",
-        },
-        DURATION.short
-      );
+      toast.error("Code should not be blank", {
+        icon: <i className="fas fa-exclamation-triangle"></i>,
+      });
       return;
     } else if (!languageSet.find(language)) {
-      enqueue(
-        {
-          startEnhancer: (() => (
-            <i className="fas fa-exclamation-triangle"></i>
-          )) as any,
-          overrides: snackBarNegative,
-          message: "Choose a valid language",
-        },
-        DURATION.short
-      );
+      toast.error("Choose a valid language", {
+        icon: <i className="fas fa-exclamation-triangle"></i>,
+      });
       return;
     }
     setClicked(true);
     setIsLoading(true);
     setCopied(false);
-    exportHandler(code, language, input, expire, setIsLoading, setId);
+    exportHandler(
+      code,
+      language,
+      input,
+      { value: expire },
+      setIsLoading,
+      setId
+    ); // Pass expire as object
   };
 
   const options = [
@@ -97,123 +74,96 @@ const Share: React.FC<{ show: boolean; setShow: (show: boolean) => void }> = ({
     { label: "5 days", value: "6" },
   ];
   return (
-    <Modal
-      onClose={() => {
-        setShow(false);
-        setClicked(false);
+    <Dialog
+      open={show}
+      onOpenChange={(open) => {
+        setShow(open);
+        if (!open) setClicked(false);
       }}
-      closeable
-      isOpen={show}
-      size={SIZE.default}
-      unstable_ModalBackdropScroll={true}
-      role={ROLE.dialog}
     >
-      <ModalHeader>
-        <h3>Share Your Code</h3>
-      </ModalHeader>
-      <ModalBody>
-        <FormControl label={() => "Expire After"}>
-          <Select
-            isDisabled={isLoading}
-            value={expire}
-            options={options}
-            onChange={(exp: any) => {
-              setExpire(exp);
-            }}
-          />
-        </FormControl>
-        <Button
-          size={SIZE.compact}
-          isLoading={isLoading}
-          overrides={{
-            BaseButton: {
-              style: ({ $theme }: { $theme: any }) => ({
-                width: "100%",
-                marginTop: 0,
-                borderTopLeftRadius: $theme.borders.radius200,
-                borderTopRightRadius: $theme.borders.radius200,
-                borderBottomRightRadius: $theme.borders.radius200,
-                borderBottomLeftRadius: $theme.borders.radius200,
-              }),
-            },
-          }}
-          onClick={shareHandler}
-        >
-          <i
-            className="fas fa-share"
-            style={{
-              marginRight: "10px",
-            }}
-          ></i>
-          Share
-        </Button>
-        {/* Copying the ID */}
-        <div className={css({ display: "flex", marginTop: "15px" })}>
-          {clicked ? (
-            isLoading ? (
-              <Skeleton rows={0} height={"40px"} width={"100%"} animation />
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Share Your Code</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="expire" className="text-right">
+              Expire After
+            </Label>
+            <Select onValueChange={setExpire} value={expire}>
+              <SelectTrigger id="expire" className="col-span-3">
+                <SelectValue placeholder="Select expiry time" />
+              </SelectTrigger>
+              <SelectContent>
+                {options.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            onClick={shareHandler}
+            disabled={isLoading}
+            className="w-full"
+          >
+            <i className="fas fa-share mr-2"></i>
+            Share
+          </Button>
+          {/* Copying the ID */}
+          <div className="flex items-center space-x-2">
+            {clicked ? (
+              isLoading ? (
+                <Skeleton className="h-10 w-full" />
+              ) : (
+                <>
+                  <Input
+                    ref={linkRef}
+                    placeholder="Link"
+                    value={id}
+                    readOnly
+                    className="flex-grow"
+                  />
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      linkRef.current && linkRef.current.select();
+                      document.execCommand("copy");
+                      setCopied(true);
+                      setTimeout(() => {
+                        setCopied(false);
+                      }, 2000);
+                    }}
+                  >
+                    <i className="fas fa-copy mr-2"></i>
+                    Copy
+                  </Button>
+                </>
+              )
             ) : (
-              <>
-                <Input
-                  inputRef={linkRef}
-                  placeholder="Link"
-                  value={id}
-                  size={SIZE.compact}
-                  startEnhancer={(() => <i className="fas fa-key"></i>) as any}
-                />
-                <Button
-                  kind={ButtonKind.primary}
-                  size={SIZE.compact}
-                  startEnhancer={(() => <i className="fas fa-copy"></i>) as any}
-                  onClick={() => {
-                    linkRef.current && linkRef.current.select();
-                    document.execCommand("copy");
-                    setCopied(true);
-                    setTimeout(() => {
-                      setCopied(false);
-                    }, 2000);
-                  }}
-                >
-                  Copy
-                </Button>
-              </>
-            )
-          ) : (
-            <p>
-              <i
-                className={
-                  `fas fa-info-circle ` +
-                  css({
-                    marginRight: "5px",
-                  })
-                }
-              ></i>
-              Click Share to get the share ID
+              <p className="text-sm text-muted-foreground">
+                <i className="fas fa-info-circle mr-2"></i>
+                Click Share to get the share ID
+              </p>
+            )}
+          </div>
+          {copied && (
+            <p className="text-sm text-green-500">
+              Copied to your clipboard 🎉, share this key with others 😀
             </p>
           )}
         </div>
-        {copied && (
-          <p
-            className={css({
-              color: theme.colors.positive300,
-            })}
-          >
-            Copied to your clipboard 🎉, share this key with others 😀
-          </p>
-        )}
-      </ModalBody>
-      <ModalFooter>
-        <ModalButton
-          onClick={() => {
-            setShow(false);
-            setClicked(false);
-          }}
-          kind={ButtonKind.tertiary}
-        >
-          Close
-        </ModalButton>
-      </ModalFooter>
-    </Modal>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+      <Toaster />
+    </Dialog>
   );
 };
 

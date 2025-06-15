@@ -1,37 +1,33 @@
 "use strict";
 import { useState, lazy, Suspense } from "react";
-
-// Baseui
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
-  HeaderNavigation,
-  ALIGN,
-  StyledNavigationList,
-  StyledNavigationItem,
-} from "baseui/header-navigation";
-import { Button, SIZE, SHAPE } from "baseui/button";
-import { Combobox } from "baseui/combobox";
-import { Heading, HeadingLevel } from "baseui/heading";
-import { useSnackbar, DURATION } from "baseui/snackbar";
-import { StatefulPopover, TRIGGER_TYPE } from "baseui/popover";
-
-import Logo from "../assets/logo.png";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Toaster, toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Logo from "@/assets/logo.png";
 const Settings = lazy(() => import("./Settings"));
 const Share = lazy(() => import("./Share"));
 const InfoModel = lazy(() => import("./Info"));
-
-
+import ImportSharedCode from "./ImportSharedCode";
 import { useCodeEditor } from "@/app/store";
-
 import axios from "axios";
-
 import {
   languageOptions as options,
   languageSet,
 } from "../assets/languageOptions";
-
-// Pure functions
-import downloadFileUtil from "../controllers/downloadAsFile";
-import { BACKEND_URL } from "../constants";
+import downloadFileUtil from "../lib/downloadAsFile";
+import { BACKEND_URL } from "../lib/constants";
 
 const URL = `${BACKEND_URL}/execute`;
 
@@ -51,21 +47,14 @@ const NavBar: React.FC = () => {
   const [showShareModel, setShowShareModel] = useState(false);
   const [showImportCodeModel, setShowImportCodeModel] = useState(false);
   const [showInfoModel, setShowInfoModel] = useState(false);
-  const { enqueue } = useSnackbar();
 
   const handleRun = () => {
     setIsExecuting(true);
     if (!languageSet.find(language)) {
       setIsExecuting(false);
-      enqueue(
-        {
-          startEnhancer: (() => (
-            <i className="fas fa-exclamation-triangle"></i>
-          )) as any,
-          message: "Language is not valid, please select one from the dropdown",
-        },
-        DURATION.short
-      );
+      toast.error("Invalid Language", {
+        description: "Please select a valid language from the dropdown.",
+      });
       return;
     }
     const payload = {
@@ -89,168 +78,107 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <div>
-      <HeaderNavigation>
-        <StyledNavigationList $align={ALIGN.left}>
-          <StyledNavigationItem
-            $style={{
-              color: "#fff",
-              fontFamily: "Poppins",
+    <div className="flex w-full justify-between items-center px-4 py-2 bg-[#1b1c1e] text-white">
+      <div className="flex items-center">
+        <h1 className="flex items-center text-xl font-comfortaa">
+          <img
+            style={{
+              height: "33px",
+              marginRight: "5px",
             }}
-          >
-            <HeadingLevel>
-              <Heading
-                overrides={{
-                  Block: {
-                    style: ({ $theme }: { $theme: any }) => ({
-                      fontSize: "20px",
-                      lineHeight: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      fontFamily: `"Comfortaa", cursive`,
-                    }),
-                  },
-                }}
-              >
-                <img
-                  style={{
-                    height: "33px",
-                    marginRight: "5px",
-                  }}
-                  src={Logo}
-                  alt="logo"
-                />
-                codeditor
-              </Heading>
-            </HeadingLevel>
-          </StyledNavigationItem>
-          <StyledNavigationItem>
-            <Combobox
-              value={language}
-              onChange={(lang) => {
-                setLanguage(lang as string);
-                console.log(lang);
-              }}
-              size={SIZE.compact}
-              options={options}
-              error={language.length == 0}
-              mapOptionToString={(option) => option.label}
-            />
-          </StyledNavigationItem>
-          <StyledNavigationItem>
-            <StatefulPopover
-              content={() => (
-                <p
-                  style={{
-                    padding: "15px",
-                  }}
-                >
-                  Download your code
-                </p>
-              )}
-              showArrow
-              accessibilityType={"tooltip"}
-              triggerType={TRIGGER_TYPE.hover}
-            >
-              <Button
-                size={SIZE.compact}
-                shape={SHAPE.circle}
-                onClick={() => downloadFileUtil(code, language, enqueue)}
-              >
-                <i className="fas fa-file-download"></i>
-              </Button>
-            </StatefulPopover>
-          </StyledNavigationItem>
-        </StyledNavigationList>
-        <StyledNavigationList $align={ALIGN.center}>
-          <StyledNavigationItem>
-            <Button
-              size={SIZE.compact}
-              startEnhancer={(() => <i className="fas fa-play"></i>) as any}
-              isLoading={isExecuting}
-              onClick={handleRun}
-              overrides={{
-                BaseButton: {
-                  style: ({
-                    $theme,
-                    $isLoading,
-                  }: {
-                    $theme: any;
-                    $isLoading: boolean;
-                  }) => {
-                    return {
-                      backgroundColor: `${
-                        $isLoading
-                          ? $theme.colors.positive200
-                          : $theme.colors.positive300
-                      }`,
-                      borderTopLeftRadius: `${$theme.borders.radius200} !important`,
-                      borderTopRightRadius: `${$theme.borders.radius200} !important`,
-                      borderBottomLeftRadius: `${$theme.borders.radius200} !important`,
-                      borderBottomRightRadius: `${$theme.borders.radius200} !important`,
-                      paddingTop: "10px",
-                      paddingBottom: "10px",
-                      paddingLeft: "30px",
-                      paddingRight: "30px",
-                      boxShadow: `${$theme.lighting.shadow400}`,
-                    };
-                  },
-                },
-              }}
-            >
-              {" "}
-              Run{" "}
-            </Button>
-          </StyledNavigationItem>
-        </StyledNavigationList>
-        <StyledNavigationList
-          $align={ALIGN.right}
-          $style={{ marginRight: "10px" }}
+            src={Logo}
+            alt="logo"
+          />
+          codeditor
+        </h1>
+        <Select
+          value={language}
+          onValueChange={(lang) => {
+            setLanguage(lang);
+            console.log(lang);
+          }}
         >
-          {/* <StyledNavigationItem>
-                        <Input
-                            value={cla}
-                            onChange={(e) => setCLA(e.target.value)}
-                            placeholder="Command Line Args"
-                            disabled
-                            size={SIZE.compact}
-                            startEnhancer={() => <i className="fas fa-terminal"></i>}
-                            clearOnEscape
-                        />
-                    </StyledNavigationItem> */}
-          <StyledNavigationItem>
-            <Button
-              startEnhancer={
-                (() => <i className="fas fa-share-alt"></i>) as any
-              }
-              size={SIZE.compact}
-              onClick={() => setShowShareModel(true)}
-              shape={SHAPE.pill}
-            >
-              Share
+          <SelectTrigger className="w-[180px] ml-4 bg-[#282c34] text-white">
+            <SelectValue placeholder="Select Language" />
+          </SelectTrigger>
+          <SelectContent className="bg-[#282c34] text-white">
+            {options.map((option) => (
+              <SelectItem key={option.id} value={option.id}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon" className="ml-2">
+              <i className="fas fa-file-download"></i>
             </Button>
-          </StyledNavigationItem>
-          <StyledNavigationItem>
-            <Button
-              size={SIZE.compact}
-              onClick={() => setShowSettings(true)}
-              shape={SHAPE.circle}
-            >
-              <i className="fas fa-cog"></i>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 bg-[#282c34] text-white">
+            <Button onClick={() => downloadFileUtil(code, language)}>
+              Download your code
             </Button>
-          </StyledNavigationItem>
-          <StyledNavigationItem>
-            <Button
-              size={SIZE.compact}
-              shape={SHAPE.circle}
-              onClick={() => setShowInfoModel(true)}
-            >
-              <i className="fas fa-info"></i>
-            </Button>
-          </StyledNavigationItem>
-        </StyledNavigationList>
-      </HeaderNavigation>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="flex items-center">
+        <Button
+          onClick={handleRun}
+          disabled={isExecuting}
+          className={cn(
+            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full shadow-lg",
+            isExecuting && "opacity-50 cursor-not-allowed"
+          )}
+        >
+          {isExecuting ? (
+            <>
+              <i className="fas fa-spinner fa-spin mr-2"></i> Running...
+            </>
+          ) : (
+            <>
+              <i className="fas fa-play mr-2"></i> Run
+            </>
+          )}
+        </Button>
+      </div>
+
+      <div className="flex items-center mr-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="ml-2"
+          onClick={() => setShowShareModel(true)}
+        >
+          <i className="fas fa-share-alt"></i>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="ml-2"
+          onClick={() => setShowImportCodeModel(true)}
+        >
+          <i className="fas fa-file-import"></i>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="ml-2"
+          onClick={() => setShowSettings(true)}
+        >
+          <i className="fas fa-cog"></i>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="ml-2"
+          onClick={() => setShowInfoModel(true)}
+        >
+          <i className="fas fa-info"></i>
+        </Button>
+      </div>
       <Suspense fallback={<div>Loading...</div>}>
         <Settings
           showSettings={showSettings}
@@ -263,6 +191,13 @@ const NavBar: React.FC = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <InfoModel isOpen={showInfoModel} setIsOpen={setShowInfoModel} />
       </Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ImportSharedCode
+          show={showImportCodeModel}
+          setShow={setShowImportCodeModel}
+        />
+      </Suspense>
+      <Toaster />
     </div>
   );
 };

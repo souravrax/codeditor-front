@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { BACKEND_URL, BASE_URL } from "../constants";
+import { BACKEND_URL, BASE_URL } from "../lib/constants";
 
 const URL = `${BACKEND_URL}/share/export`;
 
