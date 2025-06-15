@@ -1,7 +1,7 @@
 import Axios from "axios";
-import { BASE_URL } from "../constants";
+import { BACKEND_URL } from "../constants";
 
-const URL = `${BASE_URL}/share/import`;
+const URL = `${BACKEND_URL}/share/import`;
 
 const importHandler = async (
     id,
