@@ -39,9 +39,9 @@ import {
 
 // Pure functions
 import downloadFileUtil from "../controllers/downloadAsFile";
-import { BASE_URL } from "../constants";
+import { BACKEND_URL } from "../constants";
 
-const URL = `${BASE_URL}/execute`;
+const URL = `${BACKEND_URL}/execute`;
 
 const NavBar = ({
   code,
