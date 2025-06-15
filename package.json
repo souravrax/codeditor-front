@@ -2,6 +2,7 @@
   "name": "client",
   "version": "1.0.1",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^1.1.0",
@@ -12,6 +13,9 @@
     "@vitejs/plugin-react-swc": "^3.10.2",
     "axios": "^0.21.0",
     "baseui": "^9.104.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.515.0",
     "monaco-editor": "^0.49.0",
     "monaco-vim": "^0.1.8",
     "prop-types": "^15.8.1",
@@ -28,6 +32,7 @@
     "redux-persist": "^6.0.0",
     "styletron-engine-atomic": "^1.4.6",
     "styletron-react": "^5.2.7",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
     "vite": "^6.3.5",
     "vite-plugin-svgr": "^4.3.0",
@@ -51,7 +56,12 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^24.0.1",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "eslint-plugin-baseui": "^9.104.0",
+    "tw-animate-css": "^1.3.4",
+    "typescript": "^5.8.3",
     "vite-plugin-monaco-editor": "^1.1.0"
   }
 }
