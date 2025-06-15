@@ -11,7 +11,7 @@ import {
 import { Button, SIZE, SHAPE } from "baseui/button";
 import { Combobox } from "baseui/combobox";
 import { Heading, HeadingLevel } from "baseui/heading";
-import { useSnackbar, PLACEMENT, DURATION } from "baseui/snackbar";
+import { useSnackbar, DURATION } from "baseui/snackbar";
 import { StatefulPopover, TRIGGER_TYPE } from "baseui/popover";
 
 import Logo from "../assets/logo.png";
@@ -19,19 +19,11 @@ const Settings = lazy(() => import("./Settings"));
 const Share = lazy(() => import("./Share"));
 const InfoModel = lazy(() => import("./Info"));
 
-// Redux
-import { connect } from "react-redux";
-import {
-  setCommandLineArguments,
-  setExecutionState,
-  setLanguage,
-  setOutput,
-} from "../app/master/master-actions";
 
-// Connect to server
+import { useCodeEditor } from "@/app/store";
+
 import axios from "axios";
 
-// Resource import
 import {
   languageOptions as options,
   languageSet,
@@ -43,22 +35,23 @@ import { BACKEND_URL } from "../constants";
 
 const URL = `${BACKEND_URL}/execute`;
 
-const NavBar = ({
-  code,
-  isExecuting,
-  setIsExecuting,
-  cla,
-  setCLA,
-  language,
-  setLanguage,
-  input,
-  setOutput,
-}) => {
+const NavBar: React.FC = () => {
+  const code = useCodeEditor((state) => state.code);
+  const isExecuting = useCodeEditor((state) => state.isExecuting);
+  const language = useCodeEditor((state) => state.language);
+  const input = useCodeEditor((state) => state.input);
+  const cla = useCodeEditor((state) => state.commandLineArguments);
+
+  const setIsExecuting = useCodeEditor((state) => state.setIsExecuting);
+  const setLanguage = useCodeEditor((state) => state.setLanguage);
+  const setOutput = useCodeEditor((state) => state.setOutput);
+  const setCLA = useCodeEditor((state) => state.setCommandLineArguments);
+
   const [showSettings, setShowSettings] = useState(false);
   const [showShareModel, setShowShareModel] = useState(false);
   const [showImportCodeModel, setShowImportCodeModel] = useState(false);
   const [showInfoModel, setShowInfoModel] = useState(false);
-  const { enqueue } = useSnackbar(PLACEMENT.top);
+  const { enqueue } = useSnackbar();
 
   const handleRun = () => {
     setIsExecuting(true);
@@ -66,9 +59,9 @@ const NavBar = ({
       setIsExecuting(false);
       enqueue(
         {
-          startEnhancer: ({ size }) => (
+          startEnhancer: (() => (
             <i className="fas fa-exclamation-triangle"></i>
-          ),
+          )) as any,
           message: "Language is not valid, please select one from the dropdown",
         },
         DURATION.short
@@ -109,7 +102,7 @@ const NavBar = ({
               <Heading
                 overrides={{
                   Block: {
-                    style: ({ $theme }) => ({
+                    style: ({ $theme }: { $theme: any }) => ({
                       fontSize: "20px",
                       lineHeight: "100%",
                       display: "flex",
@@ -136,11 +129,10 @@ const NavBar = ({
             <Combobox
               value={language}
               onChange={(lang) => {
-                setLanguage(lang);
+                setLanguage(lang as string);
                 console.log(lang);
               }}
               size={SIZE.compact}
-              clearable={false}
               options={options}
               error={language.length == 0}
               mapOptionToString={(option) => option.label}
@@ -175,12 +167,18 @@ const NavBar = ({
           <StyledNavigationItem>
             <Button
               size={SIZE.compact}
-              startEnhancer={() => <i className="fas fa-play"></i>}
+              startEnhancer={(() => <i className="fas fa-play"></i>) as any}
               isLoading={isExecuting}
               onClick={handleRun}
               overrides={{
                 BaseButton: {
-                  style: ({ $theme, $isLoading }) => {
+                  style: ({
+                    $theme,
+                    $isLoading,
+                  }: {
+                    $theme: any;
+                    $isLoading: boolean;
+                  }) => {
                     return {
                       backgroundColor: `${
                         $isLoading
@@ -223,7 +221,9 @@ const NavBar = ({
                     </StyledNavigationItem> */}
           <StyledNavigationItem>
             <Button
-              startEnhancer={() => <i className="fas fa-share-alt"></i>}
+              startEnhancer={
+                (() => <i className="fas fa-share-alt"></i>) as any
+              }
               size={SIZE.compact}
               onClick={() => setShowShareModel(true)}
               shape={SHAPE.pill}
@@ -267,19 +267,4 @@ const NavBar = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  isExecuting: state.master.isExecuting,
-  language: state.master.language,
-  cla: state.master.commandLineArguments,
-  input: state.master.input,
-  code: state.master.code,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setIsExecuting: (value) => dispatch(setExecutionState(value)),
-  setLanguage: (language) => dispatch(setLanguage(language)),
-  setCLA: (cla) => dispatch(setCommandLineArguments(cla)),
-  setOutput: (output) => dispatch(setOutput(output)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default NavBar;

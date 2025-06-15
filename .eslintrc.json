@@ -5,6 +5,7 @@
     "rules": {
         "baseui/deprecated-theme-api": "warn",
         "baseui/deprecated-component-api": "warn",
-        "baseui/no-deep-imports": "warn"
+        "baseui/no-deep-imports": "warn",
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }

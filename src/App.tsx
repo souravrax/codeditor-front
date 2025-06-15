@@ -1,32 +1,19 @@
-import React, { useState } from 'react';
+import { BaseProvider, LightTheme, DarkTheme } from "baseui";
+import { SnackbarProvider } from "baseui/snackbar";
+import MainPage from "./pages/MainPage.jsx";
+import { useAppSettings } from "./app/store.js";
 
+const App = () => {
+  const theme = useAppSettings((s) => s.theme);
+  return (
+    <BaseProvider
+      theme={theme.toLowerCase() == "light" ? LightTheme : DarkTheme}
+    >
+      <SnackbarProvider>
+        <MainPage />
+      </SnackbarProvider>
+    </BaseProvider>
+  );
+};
 
-// BaseWeb
-import { BaseProvider, LightTheme, DarkTheme } from "baseui"
-import { SnackbarProvider } from 'baseui/snackbar'
-
-
-// Component/Container Imports
-import MainPage from './pages/MainPage.jsx'
-
-// Redux
-import { connect } from 'react-redux';
-
-
-const App = ({ theme }) => {
-    return (
-        <BaseProvider
-            theme={theme.toLowerCase() == "light" ? LightTheme : DarkTheme}
-        >
-            <SnackbarProvider>
-                <MainPage />
-            </SnackbarProvider>
-        </BaseProvider>
-    )
-}
-
-const mapStateToProps = state => ({
-    theme: state.settings.theme
-})
-
-export default connect(mapStateToProps)(App);
+export default App;

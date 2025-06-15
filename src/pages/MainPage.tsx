@@ -5,24 +5,16 @@ const Editor = lazy(() => import("../components/Editor"));
 
 import { Textarea } from "baseui/textarea";
 
-import { connect } from "react-redux";
-
-import {
-  setInput,
-  setCode,
-  setLanguage,
-  setOutput,
-} from "../app/master/master-actions";
 import importHandler from "../controllers/importHandler";
+import { useCodeEditor } from "@/app/store";
 
-const MainPage = ({
-  input,
-  setInput,
-  output,
-  setCode,
-  setLanguage,
-  setOutput,
-}) => {
+const MainPage = () => {
+  const setInput = useCodeEditor((s) => s.setInput);
+  const setCode = useCodeEditor((s) => s.setCode);
+  const setLanguage = useCodeEditor((s) => s.setLanguage);
+  const setOutput = useCodeEditor((s) => s.setOutput);
+  const input = useCodeEditor((s) => s.input);
+  const output = useCodeEditor((s) => s.output);
   const { sharedId } = useParams();
 
   useEffect(() => {
@@ -104,16 +96,4 @@ const MainPage = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  setInput: (input) => dispatch(setInput(input)),
-  setCode: (code) => dispatch(setCode(code)),
-  setLanguage: (language) => dispatch(setLanguage(language)),
-  setOutput: (output) => dispatch(setOutput(output)),
-});
-
-const mapStateToProps = (state) => ({
-  input: state.master.input,
-  output: state.master.output,
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
+export default MainPage;
