@@ -45,7 +45,7 @@ const App = () => {
     <div className="flex flex-col h-screen w-full p-4 gap-4">
       <NavBar />
       <div className="flex-1 w-full min-h-0 flex gap-4">
-        <div className="w-[60%] rounded-lg overflow-hidden border p-1">
+        <div className="w-[60%] rounded-lg overflow-hidden border">
           <Suspense fallback={<div>Loading...</div>}>
             <Editor />
           </Suspense>

@@ -1,9 +1,79 @@
+import * as monaco from "monaco-editor";
 import { useState, useEffect, useRef, Suspense, SetStateAction } from "react";
 import MonacoEditor from "@monaco-editor/react";
 
 import languageToSyntax from "../assets/mapLanguageToSyntax.json";
 import { useAppSettings, useCodeEditor } from "@/store/store";
 import { useTheme } from "@/context/ThemeProvider";
+import { loader } from "@monaco-editor/react";
+
+loader.config({ monaco });
+
+monaco.editor.defineTheme("transparent", {
+  base: "vs-dark",
+  inherit: true,
+  rules: [
+    {
+      background: "00000000",
+    } as any,
+    {
+      token: "comment",
+      foreground: "6a9955",
+    },
+    {
+      token: "string",
+      foreground: "ce9178",
+    },
+    {
+      token: "number",
+      foreground: "b5cea8",
+    },
+    {
+      token: "keyword",
+      foreground: "569cd6",
+    },
+    {
+      token: "type",
+      foreground: "4ec9b0",
+    },
+    {
+      token: "delimiter",
+      foreground: "d4d4d4",
+    },
+    {
+      token: "tag",
+      foreground: "569cd6",
+    },
+    {
+      token: "attribute.name",
+      foreground: "9cdcfe",
+    },
+    {
+      token: "attribute.value",
+      foreground: "ce9178",
+    },
+    {
+      token: "operator",
+      foreground: "d4d4d4",
+    },
+  ],
+  colors: {
+    "editor.background": "#00000000",
+    "editor.foreground": "#d4d4d4",
+    "editor.lineHighlightBackground": "#ffffff1a",
+    "editorCursor.foreground": "#d4d4d4",
+    "editorWhitespace.foreground": "#ffffff1a",
+    "editorIndentGuide.background": "#ffffff1a",
+    "editorIndentGuide.activeBackground": "#ffffff33",
+    "editor.selectionBackground": "#264f78",
+
+    "minimap.background": "#00000000",
+    "minimap.selectionHighlight": "#264f7880",
+    "minimapSlider.background": "#ffffff20",
+    "minimapSlider.hoverBackground": "#ffffff33",
+    "minimapSlider.activeBackground": "#ffffff44",
+  },
+});
 
 const Editor = () => {
   const { resolvedTheme: theme } = useTheme();
@@ -22,9 +92,9 @@ const Editor = () => {
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const [editorOptions, setEditorOptions] = useState({});
   const execute = useCodeEditor((s) => s.execute);
-  const code = useCodeEditor(s => s.code);
-  const language = useCodeEditor(s => s.language);
-  const setCode = useCodeEditor(s => s.setCode);
+  const code = useCodeEditor((s) => s.code);
+  const language = useCodeEditor((s) => s.language);
+  const setCode = useCodeEditor((s) => s.setCode);
 
   const editorDidMount = (editor: any, monaco: any) => {
     editor.onKeyDown((event: any) => {
@@ -104,9 +174,11 @@ const Editor = () => {
             language={
               languageToSyntax[language as keyof typeof languageToSyntax]
             }
-            theme={`vs-${theme}`}
+            theme={`transparent`}
             value={code}
-            options={editorOptions}
+            options={{
+              ...editorOptions,
+            }}
             onChange={(newCode, event) => {
               setCode(newCode ?? "");
             }}
