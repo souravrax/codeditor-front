@@ -3,10 +3,11 @@ import MonacoEditor from "@monaco-editor/react";
 
 import languageToSyntax from "../assets/mapLanguageToSyntax.json";
 import { useAppSettings, useCodeEditor } from "@/store/store";
+import { useTheme } from "@/context/ThemeProvider";
 
 const Editor = () => {
+  const { resolvedTheme: theme } = useTheme();
   const {
-    theme,
     showUnused,
     selectOnLineNumbers,
     scrollbar,
