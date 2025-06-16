@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, Suspense, SetStateAction } from "react";
 import MonacoEditor from "@monaco-editor/react";
 
 import languageToSyntax from "../assets/mapLanguageToSyntax.json";
-import { useAppSettings, useCodeEditor } from "@/app/store";
+import { useAppSettings, useCodeEditor } from "@/store/store";
 
 const Editor = () => {
   const {

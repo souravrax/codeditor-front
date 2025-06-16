@@ -6,6 +6,7 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,12 +23,10 @@ import { toast, Toaster } from "sonner";
 
 import exportHandler from "@/lib/exportHandler";
 import { languageSet } from "@/assets/languageOptions";
-import { useCodeEditor } from "@/app/store";
+import { useCodeEditor } from "@/store/store";
+import { Share2Icon } from "lucide-react";
 
-const Share: React.FC<{ show: boolean; setShow: (show: boolean) => void }> = ({
-  show,
-  setShow,
-}) => {
+const Share = () => {
   const code = useCodeEditor((state) => state.code);
   const language = useCodeEditor((state) => state.language);
   const input = useCodeEditor((state) => state.input);
@@ -74,13 +73,12 @@ const Share: React.FC<{ show: boolean; setShow: (show: boolean) => void }> = ({
     { label: "5 days", value: "6" },
   ];
   return (
-    <Dialog
-      open={show}
-      onOpenChange={(open) => {
-        setShow(open);
-        if (!open) setClicked(false);
-      }}
-    >
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <Share2Icon size={16} />
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Share Your Code</DialogTitle>

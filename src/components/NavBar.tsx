@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -18,9 +18,8 @@ import {
 import Logo from "@/assets/logo.png";
 const Settings = lazy(() => import("./Settings"));
 const Share = lazy(() => import("./Share"));
-const InfoModel = lazy(() => import("./Info"));
-import ImportSharedCode from "./ImportSharedCode";
-import { useCodeEditor } from "@/app/store";
+const Info = lazy(() => import("./Info"));
+import { useCodeEditor } from "@/store/store";
 import axios from "axios";
 import {
   languageOptions as options,
@@ -28,6 +27,16 @@ import {
 } from "../assets/languageOptions";
 import downloadFileUtil from "../lib/downloadAsFile";
 import { BACKEND_URL } from "../lib/constants";
+import {
+  DownloadIcon,
+  InfoIcon,
+  Loader2,
+  PlayIcon,
+  SettingsIcon,
+  Share2Icon,
+  ShareIcon,
+  UploadIcon,
+} from "lucide-react";
 
 const URL = `${BACKEND_URL}/execute`;
 
@@ -41,15 +50,17 @@ const NavBar: React.FC = () => {
   const setIsExecuting = useCodeEditor((state) => state.setIsExecuting);
   const setLanguage = useCodeEditor((state) => state.setLanguage);
   const setOutput = useCodeEditor((state) => state.setOutput);
-  const setCLA = useCodeEditor((state) => state.setCommandLineArguments);
-
-  const [showSettings, setShowSettings] = useState(false);
-  const [showShareModel, setShowShareModel] = useState(false);
-  const [showImportCodeModel, setShowImportCodeModel] = useState(false);
-  const [showInfoModel, setShowInfoModel] = useState(false);
 
   const handleRun = () => {
     setIsExecuting(true);
+    const payload = {
+      code: code,
+      cArgs: cla,
+      language: language,
+      input: input,
+    };
+
+    console.table(payload);
     if (!languageSet.find(language)) {
       setIsExecuting(false);
       toast.error("Invalid Language", {
@@ -57,12 +68,7 @@ const NavBar: React.FC = () => {
       });
       return;
     }
-    const payload = {
-      code: code,
-      cArgs: cla,
-      language: language,
-      input: input,
-    };
+
     console.table(payload);
     axios
       .post(URL, payload)
@@ -78,7 +84,7 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full justify-between items-center px-4 py-2 bg-[#1b1c1e] text-white">
+    <div className="flex w-full justify-between items-center px-8 py-2 bg-background text-foreground">
       <div className="flex items-center">
         <h1 className="flex items-center text-xl font-comfortaa">
           <img
@@ -98,12 +104,12 @@ const NavBar: React.FC = () => {
             console.log(lang);
           }}
         >
-          <SelectTrigger className="w-[180px] ml-4 bg-[#282c34] text-white">
+          <SelectTrigger className="w-[180px] ml-4 bg-background text-foreground">
             <SelectValue placeholder="Select Language" />
           </SelectTrigger>
-          <SelectContent className="bg-[#282c34] text-white">
+          <SelectContent className="bg-background text-foreground">
             {options.map((option) => (
-              <SelectItem key={option.id} value={option.id}>
+              <SelectItem key={option.id} value={option.label}>
                 {option.label}
               </SelectItem>
             ))}
@@ -113,7 +119,7 @@ const NavBar: React.FC = () => {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon" className="ml-2">
-              <i className="fas fa-file-download"></i>
+              <DownloadIcon size={24} />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0 bg-[#282c34] text-white">
@@ -135,69 +141,27 @@ const NavBar: React.FC = () => {
         >
           {isExecuting ? (
             <>
-              <i className="fas fa-spinner fa-spin mr-2"></i> Running...
+              <Loader2 className="animate-spin" size={16} /> Running...
             </>
           ) : (
             <>
-              <i className="fas fa-play mr-2"></i> Run
+              <PlayIcon size={16} /> Run
             </>
           )}
         </Button>
       </div>
 
-      <div className="flex items-center mr-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="ml-2"
-          onClick={() => setShowShareModel(true)}
-        >
-          <i className="fas fa-share-alt"></i>
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="ml-2"
-          onClick={() => setShowImportCodeModel(true)}
-        >
-          <i className="fas fa-file-import"></i>
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="ml-2"
-          onClick={() => setShowSettings(true)}
-        >
-          <i className="fas fa-cog"></i>
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="ml-2"
-          onClick={() => setShowInfoModel(true)}
-        >
-          <i className="fas fa-info"></i>
-        </Button>
+      <div className="flex items-center">
+        <Suspense>
+          <Share />
+        </Suspense>
+        <Suspense>
+          <Settings />
+        </Suspense>
+        <Suspense>
+          <Info />
+        </Suspense>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Settings
-          showSettings={showSettings}
-          setShowSettings={setShowSettings}
-        />
-      </Suspense>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Share show={showShareModel} setShow={setShowShareModel} />
-      </Suspense>
-      <Suspense fallback={<div>Loading...</div>}>
-        <InfoModel isOpen={showInfoModel} setIsOpen={setShowInfoModel} />
-      </Suspense>
-      <Suspense fallback={<div>Loading...</div>}>
-        <ImportSharedCode
-          show={showImportCodeModel}
-          setShow={setShowImportCodeModel}
-        />
-      </Suspense>
-      <Toaster />
     </div>
   );
 };

@@ -6,14 +6,21 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import GithubCorner from "react-github-corner";
 import { cn } from "@/lib/utils";
+import { InfoIcon } from "lucide-react";
 
-function Info({ isOpen, setIsOpen }) {
+const Info = () => {
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <InfoIcon size={16} />
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Codeditor Info</DialogTitle>
@@ -79,6 +86,6 @@ function Info({ isOpen, setIsOpen }) {
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default Info;

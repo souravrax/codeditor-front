@@ -4,18 +4,18 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-import { useAppSettings } from "@/app/store";
+import { useAppSettings } from "@/store/store";
+import { SettingsIcon } from "lucide-react";
+import { useTheme } from "@/context/ThemeProvider";
 
-const Settings: React.FC<{
-  showSettings: boolean;
-  setShowSettings: (show: boolean) => void;
-}> = ({ showSettings, setShowSettings }) => {
-  const theme = useAppSettings((state) => state.theme);
+const Settings = () => {
+  const { theme, setTheme } = useTheme();
   const minimap = useAppSettings((state) => state.minimap);
   const showUnused = useAppSettings((state) => state.showUnused);
   const selectOnLineNumbers = useAppSettings(
@@ -27,7 +27,6 @@ const Settings: React.FC<{
     (state) => state.showFoldingControls
   );
 
-  const setTheme = useAppSettings((state) => state.setTheme);
   const setMinimap = useAppSettings((state) => state.setMinimap);
   const setSelectOnLineNumber = useAppSettings(
     (state) => state.setSelectOnLineNumbers
@@ -53,7 +52,12 @@ const Settings: React.FC<{
   ];
 
   return (
-    <Dialog open={showSettings} onOpenChange={setShowSettings}>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <SettingsIcon size={16} />
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>

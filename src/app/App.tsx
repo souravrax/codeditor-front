@@ -4,7 +4,10 @@ import { useParams } from "react-router";
 const Editor = lazy(() => import("../components/Editor"));
 
 import importHandler from "@/lib/importHandler";
-import { useCodeEditor } from "@/app/store";
+import { useCodeEditor } from "@/store/store";
+import { Textarea } from "@/components/ui/textarea";
+import { ThemeProvider } from "@/context/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const App = () => {
   const setInput = useCodeEditor((s) => s.setInput);
@@ -39,39 +42,31 @@ const App = () => {
   }, [sharedId]);
 
   return (
-    <>
-      <NavBar />
-      <div
-        className="editor"
-        style={{
-          height: "60vh",
-          width: "100vw",
-        }}
-      >
-        <Suspense fallback={<div>Loading...</div>}>
-          <Editor />
-        </Suspense>
+      <div className="flex flex-col h-screen w-full">
+        <NavBar />
+        <div className="flex-1 w-full min-h-0 flex">
+          <div className="w-[60%]">
+            <Suspense fallback={<div>Loading...</div>}>
+              <Editor />
+            </Suspense>
+          </div>
+          <div className="grid grid-rows-2 w-[40%]">
+            <Textarea
+              placeholder="Input"
+              value={input}
+              onChange={(e) =>
+                setInput((e.target as HTMLTextAreaElement).value)
+              }
+              className="w-full"
+            ></Textarea>
+            <Textarea
+              value={output}
+              placeholder="Output"
+              className="w-full"
+            ></Textarea>
+          </div>
+        </div>
       </div>
-      <div
-        className="input-output"
-        style={{
-          display: "flex",
-          height: "calc(40vh - 61px)",
-        }}
-      >
-        <textarea
-          placeholder="Input"
-          value={input}
-          onChange={(e) => setInput((e.target as HTMLTextAreaElement).value)}
-          className="flex-1 w-full border-r border-t border-solid border-primary100 p-2 outline-none resize-none"
-        ></textarea>
-        <textarea
-          value={output}
-          placeholder="Output"
-          className="flex-1 w-full border-t border-solid border-primary100 bg-backgroundStateDisabled p-2 outline-none resize-none"
-        ></textarea>
-      </div>
-    </>
   );
 };
 

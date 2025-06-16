@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 import importHandler from "@/lib/importHandler";
 
-import { useCodeEditor } from "@/app/store";
+import { useCodeEditor } from "@/store/store";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
