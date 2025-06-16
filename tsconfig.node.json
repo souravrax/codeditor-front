@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "strict": true,
+    "isolatedModules": true,
+    "lib": ["ESNext"],
+    "types": ["node"]
+  },
+  "include": ["vite.config.ts", ".eslintrc.cjs"]
+} 
