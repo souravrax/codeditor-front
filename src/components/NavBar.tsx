@@ -1,5 +1,5 @@
-"use strict";
-import { useState, lazy, Suspense } from "react";
+"use strict";;
+import { lazy, Suspense } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -20,23 +19,11 @@ const Settings = lazy(() => import("./Settings"));
 const Share = lazy(() => import("./Share"));
 const Info = lazy(() => import("./Info"));
 import { useCodeEditor } from "@/store/store";
-import axios from "axios";
-import {
-  languageOptions as options,
-  languageSet,
-} from "../assets/languageOptions";
+import { languageOptions as options } from "../assets/languageOptions";
 import downloadFileUtil from "../lib/downloadAsFile";
 import { BACKEND_URL } from "../lib/constants";
-import {
-  DownloadIcon,
-  InfoIcon,
-  Loader2,
-  PlayIcon,
-  SettingsIcon,
-  Share2Icon,
-  ShareIcon,
-  UploadIcon,
-} from "lucide-react";
+import { DownloadIcon, Loader2, PlayIcon } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 const URL = `${BACKEND_URL}/execute`;
 
@@ -44,48 +31,13 @@ const NavBar: React.FC = () => {
   const code = useCodeEditor((state) => state.code);
   const isExecuting = useCodeEditor((state) => state.isExecuting);
   const language = useCodeEditor((state) => state.language);
-  const input = useCodeEditor((state) => state.input);
-  const cla = useCodeEditor((state) => state.commandLineArguments);
 
-  const setIsExecuting = useCodeEditor((state) => state.setIsExecuting);
   const setLanguage = useCodeEditor((state) => state.setLanguage);
-  const setOutput = useCodeEditor((state) => state.setOutput);
-
-  const handleRun = () => {
-    setIsExecuting(true);
-    const payload = {
-      code: code,
-      cArgs: cla,
-      language: language,
-      input: input,
-    };
-
-    console.table(payload);
-    if (!languageSet.find(language)) {
-      setIsExecuting(false);
-      toast.error("Invalid Language", {
-        description: "Please select a valid language from the dropdown.",
-      });
-      return;
-    }
-
-    console.table(payload);
-    axios
-      .post(URL, payload)
-      .then((response) => {
-        setIsExecuting(false);
-        console.log("Response: ", response);
-        setOutput(response.data.output);
-      })
-      .catch((error) => {
-        setIsExecuting(false);
-        console.log(error);
-      });
-  };
+  const execute = useCodeEditor((state) => state.execute);
 
   return (
-    <div className="flex w-full justify-between items-center px-8 py-2 bg-background text-foreground">
-      <div className="flex items-center">
+    <div className="flex w-full justify-between items-center text-foreground">
+      <div className="flex items-center p-4 bg-background/50 backdrop-blur-lg border rounded-2xl">
         <h1 className="flex items-center text-xl font-comfortaa">
           <img
             style={{
@@ -130,14 +82,12 @@ const NavBar: React.FC = () => {
         </Popover>
       </div>
 
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         <Button
-          onClick={handleRun}
+          onClick={execute}
           disabled={isExecuting}
-          className={cn(
-            "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full shadow-lg",
-            isExecuting && "opacity-50 cursor-not-allowed"
-          )}
+          className={cn(isExecuting && "opacity-50 cursor-not-allowed")}
+          variant="default"
         >
           {isExecuting ? (
             <>
@@ -145,13 +95,11 @@ const NavBar: React.FC = () => {
             </>
           ) : (
             <>
-              <PlayIcon size={16} /> Run
+              <PlayIcon size={16} /> Run{" "}
+              <Badge variant="secondary">ctrl + Enter</Badge>
             </>
           )}
         </Button>
-      </div>
-
-      <div className="flex items-center">
         <Suspense>
           <Share />
         </Suspense>

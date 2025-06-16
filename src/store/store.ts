@@ -1,3 +1,7 @@
+import { languageSet } from "@/assets/languageOptions";
+import { BACKEND_URL } from "@/lib/constants";
+import axios from "axios";
+import { toast } from "sonner";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -45,6 +49,7 @@ interface CodeEditorStore extends MasterState {
     commandLineArguments: MasterState["commandLineArguments"]
   ) => void;
   setIsExecuting: (isExecuting: MasterState["isExecuting"]) => void;
+  execute: () => Promise<void>;
 }
 
 export const useAppSettings = create(
@@ -76,7 +81,7 @@ export const useAppSettings = create(
 
 export const useCodeEditor = create(
   persist<CodeEditorStore>(
-    (set) => ({
+    (set, get) => ({
       code: "",
       input: "",
       output: "",
@@ -90,6 +95,43 @@ export const useCodeEditor = create(
       setCommandLineArguments: (commandLineArguments) =>
         set({ commandLineArguments }),
       setIsExecuting: (isExecuting) => set({ isExecuting }),
+      execute: async () => {
+        const { code, language, input, commandLineArguments, setIsExecuting } =
+          get();
+        set({
+          isExecuting: true,
+        });
+        const payload = {
+          code,
+          cArgs: commandLineArguments,
+          language,
+          input,
+        };
+        console.table(payload);
+        if (!languageSet.find(language)) {
+          set({
+            isExecuting: false,
+          });
+          toast.error("Invalid language selected", {
+            description: "Please select a valid language from the dropdown",
+          });
+        }
+        try {
+          const response = await axios.post(`${BACKEND_URL}/execute`, payload);
+          set({
+            output: response.data.output,
+          });
+        } catch (e) {
+          toast.error("Something went wrong", {
+            description:
+              "We are having issues running the code, please make sure the code is valid",
+          });
+        } finally {
+          set({
+            isExecuting: false,
+          });
+        }
+      },
     }),
     {
       name: "code-editor-storage",

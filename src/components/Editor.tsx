@@ -15,14 +15,16 @@ const Editor = () => {
     showFoldingControls,
     minimap,
   } = useAppSettings((s) => s);
-  const { code, language, setCode } = useCodeEditor((s) => s);
-
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const editorContainerRef = useRef<HTMLDivElement | null>(null);
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const [editorOptions, setEditorOptions] = useState({});
+  const execute = useCodeEditor((s) => s.execute);
+  const code = useCodeEditor(s => s.code);
+  const language = useCodeEditor(s => s.language);
+  const setCode = useCodeEditor(s => s.setCode);
 
   const editorDidMount = (editor: any, monaco: any) => {
     editor.onKeyDown((event: any) => {
@@ -32,7 +34,7 @@ const Editor = () => {
         event.preventDefault();
       } else if (key === "Enter" && ctrlKey) {
         event.preventDefault();
-        alert("Execute");
+        execute();
       }
     });
   };

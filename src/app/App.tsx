@@ -42,31 +42,29 @@ const App = () => {
   }, [sharedId]);
 
   return (
-      <div className="flex flex-col h-screen w-full">
-        <NavBar />
-        <div className="flex-1 w-full min-h-0 flex">
-          <div className="w-[60%]">
-            <Suspense fallback={<div>Loading...</div>}>
-              <Editor />
-            </Suspense>
-          </div>
-          <div className="grid grid-rows-2 w-[40%]">
-            <Textarea
-              placeholder="Input"
-              value={input}
-              onChange={(e) =>
-                setInput((e.target as HTMLTextAreaElement).value)
-              }
-              className="w-full"
-            ></Textarea>
-            <Textarea
-              value={output}
-              placeholder="Output"
-              className="w-full"
-            ></Textarea>
-          </div>
+    <div className="flex flex-col h-screen w-full p-4 gap-4">
+      <NavBar />
+      <div className="flex-1 w-full min-h-0 flex gap-4">
+        <div className="w-[60%] rounded-lg overflow-hidden border p-1">
+          <Suspense fallback={<div>Loading...</div>}>
+            <Editor />
+          </Suspense>
+        </div>
+        <div className="grid grid-rows-2 w-[40%] gap-4">
+          <Textarea
+            placeholder="Input"
+            value={input}
+            onChange={(e) => setInput((e.target as HTMLTextAreaElement).value)}
+            className="w-full resize-none"
+          ></Textarea>
+          <Textarea
+            value={output}
+            placeholder="Output"
+            className="w-full resize-none"
+          ></Textarea>
         </div>
       </div>
+    </div>
   );
 };
 

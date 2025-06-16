@@ -160,7 +160,6 @@ const Share = () => {
           </DialogClose>
         </DialogFooter>
       </DialogContent>
-      <Toaster />
     </Dialog>
   );
 };
